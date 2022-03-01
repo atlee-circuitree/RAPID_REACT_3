@@ -42,9 +42,6 @@ public class TurretSubsystem extends SubsystemBase {
 
   @Override
   public void periodic() {
-  
-    turretDashboard = "Encoder Position/" + turretEncoder.get() + ";";
-    turretDashboard = "PWM Encoder Position/" + pwmEncoder.getRaw() + ";";
    
   }
 
