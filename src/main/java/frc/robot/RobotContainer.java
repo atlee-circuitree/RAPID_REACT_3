@@ -99,7 +99,7 @@ public class RobotContainer {
     JoystickButton OperatorA = new JoystickButton(m_controller2, XboxController.Button.kA.value);
     JoystickButton OperatorB = new JoystickButton(m_controller2, XboxController.Button.kB.value);
     
-    OperatorA.whenPressed(m_colorTest);
+    OperatorA.whenPressed(m_shootCommand);
     //DriverB.whileHeld(m_colorTest);
 
 

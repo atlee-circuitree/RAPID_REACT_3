@@ -40,11 +40,9 @@ public class ShooterWithLimelight extends CommandBase {
     distance = limelight.getDistanceToTarget();
     //PUT ALGORITHIM HERE
  
-    if (feeder.isRed() == true)
-      turret.runTurretWithVelocity(velocity);
-    else {
-      turret.runTurretWithVelocity(1000);
-    }
+    
+    turret.runTurretWithVelocity(velocity);
+ 
 
   }
 
