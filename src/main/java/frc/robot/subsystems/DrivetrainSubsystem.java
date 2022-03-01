@@ -8,10 +8,12 @@ import frc.robot.Constants;
 import frc.robot.dependents.Mk3SwerveModuleHelper;
 import frc.robot.dependents.SdsModuleConfigurations;
 import frc.robot.dependents.SwerveModule;
+import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
+import edu.wpi.first.math.kinematics.SwerveDriveOdometry;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.wpilibj.shuffleboard.BuiltInLayouts;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
@@ -81,6 +83,8 @@ public class DrivetrainSubsystem extends SubsystemBase {
   private final SwerveModule m_backRightModule;
 
   private ChassisSpeeds m_chassisSpeeds = new ChassisSpeeds(0.0, 0.0, 0.0);
+
+  SwerveDriveOdometry odometry = new SwerveDriveOdometry(Constants.SWERVE_KINEMATICS, m_navx.getRotation2d());
 
   public DrivetrainSubsystem() {
     ShuffleboardTab tab = Shuffleboard.getTab("Drivetrain");
@@ -185,6 +189,30 @@ public class DrivetrainSubsystem extends SubsystemBase {
     m_chassisSpeeds = chassisSpeeds;
   }
 
+
+  //Auto commands
+
+  public Pose2d getPose() {
+    return odometry.getPoseMeters();
+  }
+      
+  public void resetOdometry(Pose2d pose) {
+    odometry.resetPosition(pose, m_navx.getRotation2d());
+  }
+
+  public void setSwerveModuleStates(SwerveModuleState[] states){
+        m_frontLeftModule.set(states[0].speedMetersPerSecond / MAX_VELOCITY_METERS_PER_SECOND * MAX_VOLTAGE, states[0].angle.getRadians());
+        m_frontRightModule.set(states[1].speedMetersPerSecond / MAX_VELOCITY_METERS_PER_SECOND * MAX_VOLTAGE, states[1].angle.getRadians());
+        m_backLeftModule.set(states[2].speedMetersPerSecond / MAX_VELOCITY_METERS_PER_SECOND * MAX_VOLTAGE, states[2].angle.getRadians());
+        m_backRightModule.set(states[3].speedMetersPerSecond / MAX_VELOCITY_METERS_PER_SECOND * MAX_VOLTAGE, states[3].angle.getRadians());
+  }
+  public void killModules(){
+          m_frontLeftModule.set(0, 0);
+          m_frontRightModule.set(0, 0);
+          m_backLeftModule.set(0, 0);
+          m_backLeftModule.set(0, 0);
+  }
+
   @Override
   public void periodic() {
     SwerveModuleState[] states = m_kinematics.toSwerveModuleStates(m_chassisSpeeds);
@@ -193,6 +221,8 @@ public class DrivetrainSubsystem extends SubsystemBase {
     //System.out.println(m_navx.isMagnetometerCalibrated());
     //System.out.println(m_navx.getFusedHeading());
     //System.out.println(m_navx.getYaw());
+
+    odometry.update(m_navx.getRotation2d(), states[0], states[1], states[2], states[3]);
    
     m_frontLeftModule.set(states[0].speedMetersPerSecond / MAX_VELOCITY_METERS_PER_SECOND * MAX_VOLTAGE, states[0].angle.getRadians());
     m_frontRightModule.set(states[1].speedMetersPerSecond / MAX_VELOCITY_METERS_PER_SECOND * MAX_VOLTAGE, states[1].angle.getRadians());

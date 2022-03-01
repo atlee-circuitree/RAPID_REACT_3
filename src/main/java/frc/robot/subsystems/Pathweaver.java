@@ -21,6 +21,8 @@ import frc.robot.Constants;
 
 public class Pathweaver extends SubsystemBase {
   /** Creates a new Pathweaver. */
+  DrivetrainSubsystem drivetrain = new DrivetrainSubsystem();
+
   public Pathweaver() {}
 
   @Override
@@ -28,7 +30,7 @@ public class Pathweaver extends SubsystemBase {
     // This method will be called once per scheduler run
   }
 
-  /*
+  //Rename command as needed
   public Command trajectoryA() {
     // Create config for trajectory
     TrajectoryConfig config =
@@ -38,7 +40,7 @@ public class Pathweaver extends SubsystemBase {
             .setKinematics(Constants.SWERVE_KINEMATICS);
 
     // An example trajectory to follow.  All units in meters.
-    Trajectory exampleTrajectory =
+    Trajectory trajectory =
         TrajectoryGenerator.generateTrajectory(
             // Start at the origin facing the +X direction
             new Pose2d(0, 0, new Rotation2d(0)),
@@ -55,9 +57,9 @@ public class Pathweaver extends SubsystemBase {
 
     SwerveControllerCommand swerveControllerCommand =
         new SwerveControllerCommand(
-            exampleTrajectory,
+            trajectory,
             drivetrain::getPose, // Functional interface to feed supplier
-            Constants.driveKinematics,
+            Constants.SWERVE_KINEMATICS,
 
             // Position controllers
             new PIDController(1.0, 0, 0),
@@ -67,10 +69,10 @@ public class Pathweaver extends SubsystemBase {
             drivetrain);
 
     // Reset odometry to the starting pose of the trajectory.
-    drivetrain.resetOdometry(exampleTrajectory.getInitialPose());
+    drivetrain.resetOdometry(trajectory.getInitialPose());
 
     // Run path following command, then stop at the end.
-    return swerveControllerCommand.andThen(() -> drivetrain.driveAllModulesNonLinear(0));
+    return swerveControllerCommand.andThen(() -> drivetrain.killModules());
   }
-  */
+  
 }
