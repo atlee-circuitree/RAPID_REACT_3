@@ -17,6 +17,7 @@ import edu.wpi.first.wpilibj2.command.PerpetualCommand;
 import edu.wpi.first.wpilibj2.command.button.Button;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import frc.robot.commands.DefaultDriveCommand;
+import frc.robot.commands.RunFeeder;
 import frc.robot.commands.ShooterWithLimelight;
 import frc.robot.commands.TestColorCommand;
 import frc.robot.commands.TurretRotateCommand;
@@ -45,12 +46,16 @@ public class RobotContainer {
    
   private final XboxController m_controller = new XboxController(0);
   private final XboxController m_controller2 = new XboxController(1);
-
+ 
   //Single Commands
   private final TurretRotateCommand m_turretRotateCommand = new TurretRotateCommand(m_turretSubsystem, m_limelightSubsystem, m_controller2);
   private final DefaultDriveCommand m_driveCommand = new DefaultDriveCommand(m_drivetrainSubsystem,() -> -modifyAxis(m_controller.getLeftY()) * DrivetrainSubsystem.MAX_VELOCITY_METERS_PER_SECOND,() -> -modifyAxis(m_controller.getLeftX()) * DrivetrainSubsystem.MAX_VELOCITY_METERS_PER_SECOND,() -> -modifyAxis(m_controller.getRightX()) * DrivetrainSubsystem.MAX_ANGULAR_VELOCITY_RADIANS_PER_SECOND);
   private final ShooterWithLimelight m_shootCommand = new ShooterWithLimelight(4000, m_turretSubsystem, m_pneumaticSubsystem, m_limelightSubsystem, m_feederSubsystem);
   private final TestColorCommand m_colorTest = new TestColorCommand(m_feederSubsystem);
+  public Command m_feederCommand(double speed) {
+    Command m_feedCommand = new RunFeeder(speed, m_feederSubsystem);
+    return m_feedCommand;
+  }
 
   /**
    * The container for the robot. Contains subsystems, OI devices, and commands.
@@ -87,8 +92,8 @@ public class RobotContainer {
     JoystickButton DriverA = new JoystickButton(m_controller, XboxController.Button.kA.value);
     JoystickButton DriverB = new JoystickButton(m_controller, XboxController.Button.kB.value);
     
-    //DriverA.whenPressed(m_shootCommand);
-    //DriverB.whileHeld(m_colorTest);
+    DriverA.whileHeld(m_feederCommand(-.5));
+    DriverB.whileHeld(m_feederCommand(.5));
 
     //P1 BUTTONS
     JoystickButton OperatorA = new JoystickButton(m_controller2, XboxController.Button.kA.value);

@@ -23,6 +23,8 @@ public class FeederSubsystem extends SubsystemBase {
   public final static ColorMatch m_colorMatcher = new ColorMatch();
 
   public static Color Red = new Color(0.561, 0.232, 0.114);
+
+  public static Color Blue = new Color(.3018, .3018, .3686);
    
   public FeederSubsystem() {
 
@@ -48,7 +50,37 @@ public class FeederSubsystem extends SubsystemBase {
     }
 
   }
- 
+
+  public boolean isBlue() {
+    
+    m_colorMatcher.addColorMatch(Blue);
+
+    if (m_colorMatcher.matchColor(Blue) != null) {
+    return false;
+    } else {
+    return true;
+    }
+
+  }
+
+  public int printRed() {
+
+    return colorSensor.getGreen();
+  
+  }
+
+  public int printGreen() {
+
+  return colorSensor.getGreen();
+
+  }
+
+  public int printBlue() {
+
+    return colorSensor.getBlue();
+  
+  }
+
   public void startUSBCamera(){
     CameraServer.startAutomaticCapture();
   }

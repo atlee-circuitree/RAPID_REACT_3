@@ -34,10 +34,12 @@ public class TestColorCommand extends CommandBase {
   @Override
   public void execute() {
 
-    if (feeder.isRed() == true) {
-    System.out.println("Red Seen");
+    if (feeder.isBlue() == true) {
+        System.out.println("Blue is Seen");
     } else {
-    System.out.println("Red Not Seen");   
+        System.out.println("Red: " + feeder.printRed());
+        System.out.println("Green: " + feeder.printGreen());
+        System.out.println("Blue: " + feeder.printBlue());
     }
  
   }

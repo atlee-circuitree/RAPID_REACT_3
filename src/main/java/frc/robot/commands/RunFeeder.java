@@ -41,6 +41,8 @@ public class RunFeeder extends CommandBase {
 
   @Override
   public void end(boolean interrupted) {
+
+    feeder.runFeeder(0);
      
   }
 
