@@ -15,7 +15,11 @@ import edu.wpi.first.wpilibj2.command.FunctionalCommand;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.Button;
 import frc.robot.commands.DefaultDriveCommand;
+import frc.robot.commands.TurretRotateCommand;
 import frc.robot.subsystems.DrivetrainSubsystem;
+import frc.robot.subsystems.LimeLightSubsystem;
+import frc.robot.subsystems.PneumaticSubsystem;
+import frc.robot.subsystems.TurretSubsystem;
 
 /**
  * This class is where the bulk of the robot should be declared. Since Command-based is a
@@ -25,9 +29,17 @@ import frc.robot.subsystems.DrivetrainSubsystem;
  */
 public class RobotContainer {
   // The robot's subsystems and commands are defined here...
+
+  //Subsystems
   private final DrivetrainSubsystem m_drivetrainSubsystem = new DrivetrainSubsystem();
+  private final TurretSubsystem m_turretSubsystem = new TurretSubsystem();
+  private final PneumaticSubsystem m_pneumaticSubsystem = new PneumaticSubsystem();
+  private final LimeLightSubsystem m_limelightSubsystem = new LimeLightSubsystem();
 
   private final XboxController m_controller = new XboxController(0);
+
+  //Single Commands
+  private final TurretRotateCommand m_turretRotateCommand = new TurretRotateCommand(m_turretSubsystem, m_limelightSubsystem, m_controller);
 
   /**
    * The container for the robot. Contains subsystems, OI devices, and commands.
