@@ -40,11 +40,11 @@ public class TurretRotateCommand extends CommandBase {
     if(xbox.getRightX() > 0.1 || xbox.getRightX() < -0.1){
       turret.turnTurret(xbox.getRightX() / 4);
     }
-    else if(limelight.HorizontalOffset() > 2){
-      turret.turnTurret(0.4);
+    else if(limelight.HorizontalOffset() > 1){
+      turret.turnTurret(0.2);
     }
-    else if(limelight.HorizontalOffset() < -2){
-      turret.turnTurret(-0.4);
+    else if(limelight.HorizontalOffset() < -1){
+      turret.turnTurret(-0.2);
     }
     else{
       turret.turnTurret(0);
