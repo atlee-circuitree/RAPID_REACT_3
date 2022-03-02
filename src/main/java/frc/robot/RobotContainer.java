@@ -5,6 +5,7 @@
 package frc.robot;
 
 import edu.wpi.first.wpilibj.GenericHID;
+import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.XboxController;
 
 import org.ejml.dense.block.MatrixOps_DDRB;
@@ -16,8 +17,10 @@ import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.PerpetualCommand;
 import edu.wpi.first.wpilibj2.command.button.Button;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
+import frc.robot.commands.ClimbPistonCommand;
 import frc.robot.commands.DefaultDriveCommand;
 import frc.robot.commands.RunFeeder;
+import frc.robot.commands.RunHookCommand;
 import frc.robot.commands.ShooterWithLimelight;
 import frc.robot.commands.TestColorCommand;
 import frc.robot.commands.TurretRotateCommand;
@@ -46,6 +49,7 @@ public class RobotContainer {
    
   private final XboxController m_controller = new XboxController(0);
   private final XboxController m_controller2 = new XboxController(1);
+  private final Joystick m_controller3 = new Joystick(2);
  
   //Single Commands
   private final TurretRotateCommand m_turretRotateCommand = new TurretRotateCommand(m_turretSubsystem, m_limelightSubsystem, m_controller2);
@@ -55,6 +59,14 @@ public class RobotContainer {
   public Command m_feederCommand(double speed) {
     Command m_feedCommand = new RunFeeder(speed, m_feederSubsystem);
     return m_feedCommand;
+  }
+  public Command m_hookCommand(double speed) {
+    Command m_hookCommand = new RunHookCommand(speed, m_pneumaticSubsystem);
+    return m_hookCommand;
+  }
+  public Command m_climbPistonCommand(boolean isUp) {
+    Command m_pneumaticCommand = new ClimbPistonCommand(isUp, m_pneumaticSubsystem);
+    return m_pneumaticCommand;
   }
 
   /**
@@ -95,13 +107,23 @@ public class RobotContainer {
     DriverA.whileHeld(m_feederCommand(-.5));
     DriverB.whileHeld(m_feederCommand(.5));
 
-    //P1 BUTTONS
+    //P2 BUTTONS
     JoystickButton OperatorA = new JoystickButton(m_controller2, XboxController.Button.kA.value);
     JoystickButton OperatorB = new JoystickButton(m_controller2, XboxController.Button.kB.value);
     
     OperatorA.whenPressed(m_shootCommand);
     //DriverB.whileHeld(m_colorTest);
 
+    //Fightstick Buttons
+    JoystickButton FightShare = new JoystickButton(m_controller3, 7);
+    JoystickButton FightOption = new JoystickButton(m_controller3, 8);
+    JoystickButton FightL3 = new JoystickButton(m_controller3, 9);
+    JoystickButton FightR3 = new JoystickButton(m_controller3, 10);
+
+    FightShare.whenPressed(m_climbPistonCommand(true));
+    FightOption.whenPressed(m_climbPistonCommand(false));
+    FightL3.whileHeld(m_hookCommand(.5));
+    FightL3.whileHeld(m_hookCommand(-.5));
 
   }
 
