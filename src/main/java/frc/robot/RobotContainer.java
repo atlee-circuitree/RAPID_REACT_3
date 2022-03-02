@@ -19,6 +19,7 @@ import edu.wpi.first.wpilibj2.command.button.Button;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import frc.robot.commands.ClimbPistonCommand;
 import frc.robot.commands.DefaultDriveCommand;
+import frc.robot.commands.KickoutPistonCommand;
 import frc.robot.commands.RunFeeder;
 import frc.robot.commands.RunHookCommand;
 import frc.robot.commands.ShooterWithLimelight;
@@ -56,8 +57,9 @@ public class RobotContainer {
   private final DefaultDriveCommand m_driveCommand = new DefaultDriveCommand(m_drivetrainSubsystem,() -> -modifyAxis(m_controller.getLeftY()) * DrivetrainSubsystem.MAX_VELOCITY_METERS_PER_SECOND,() -> -modifyAxis(m_controller.getLeftX()) * DrivetrainSubsystem.MAX_VELOCITY_METERS_PER_SECOND,() -> -modifyAxis(m_controller.getRightX()) * DrivetrainSubsystem.MAX_ANGULAR_VELOCITY_RADIANS_PER_SECOND);
   private final ShooterWithLimelight m_shootCommand = new ShooterWithLimelight(4000, m_turretSubsystem, m_pneumaticSubsystem, m_limelightSubsystem, m_feederSubsystem);
   private final TestColorCommand m_colorTest = new TestColorCommand(m_feederSubsystem);
+  private final KickoutPistonCommand m_kickoutCommand = new KickoutPistonCommand(m_pneumaticSubsystem);
   public Command m_feederCommand(double speed) {
-    Command m_feedCommand = new RunFeeder(speed, m_feederSubsystem);
+    Command m_feedCommand = new RunFeeder(speed, m_feederSubsystem, m_pneumaticSubsystem);
     return m_feedCommand;
   }
   public Command m_hookCommand(double speed) {
@@ -119,11 +121,13 @@ public class RobotContainer {
     JoystickButton FightOption = new JoystickButton(m_controller3, 8);
     JoystickButton FightL3 = new JoystickButton(m_controller3, 9);
     JoystickButton FightR3 = new JoystickButton(m_controller3, 10);
+    JoystickButton FightL1 = new JoystickButton(m_controller3, 5);
 
+    FightL1.whenPressed(m_kickoutCommand);
     FightShare.whenPressed(m_climbPistonCommand(true));
     FightOption.whenPressed(m_climbPistonCommand(false));
-    FightL3.whileHeld(m_hookCommand(.5));
-    FightL3.whileHeld(m_hookCommand(-.5));
+    FightL3.whileHeld(m_hookCommand(1));
+    FightR3.whileHeld(m_hookCommand(-1));
 
   }
 

@@ -15,11 +15,13 @@ import frc.robot.subsystems.TurretSubsystem;
 public class RunFeeder extends CommandBase {
    
   private final FeederSubsystem feeder;
+  private final PneumaticSubsystem pnuematic;
   private double targetSpeed; 
 
-  public RunFeeder(double speed,FeederSubsystem fs) {
+  public RunFeeder(double speed, FeederSubsystem fs, PneumaticSubsystem ps) {
  
     feeder = fs;
+    pnuematic = ps;
     targetSpeed = speed;
     addRequirements(feeder);
 
@@ -28,6 +30,7 @@ public class RunFeeder extends CommandBase {
   @Override
   public void initialize() {
     
+    pnuematic.kickout();
 
   }
 

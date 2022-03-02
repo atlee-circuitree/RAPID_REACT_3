@@ -78,6 +78,8 @@ public final class Constants {
 
     //Pneumatics
     
+    public static final int kickoutPnumaticDeploy = 9;
+    public static final int kickoutPnumaticRetract = 14;
     public static final int climbLeftPnumaticDeploy = 10;
     public static final int climbLeftPnumaticRetract = 15;
     public static final int climbRightPnumaticDeploy = 0;
