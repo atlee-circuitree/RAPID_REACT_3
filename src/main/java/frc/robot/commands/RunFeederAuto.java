@@ -12,20 +12,25 @@ import frc.robot.subsystems.LimeLightSubsystem;
 import frc.robot.subsystems.PneumaticSubsystem;
 import frc.robot.subsystems.TurretSubsystem;
 
-public class KickoutPistonCommand extends CommandBase {
+public class RunFeederAuto extends CommandBase {
    
-  private final PneumaticSubsystem pneumatic;
-   
-  public KickoutPistonCommand(PneumaticSubsystem ps) {
+  private final FeederSubsystem feeder;
+  private final PneumaticSubsystem pnuematic;
+  private double targetSpeed; 
+
+  public RunFeederAuto(double speed, FeederSubsystem fs, PneumaticSubsystem ps) {
  
-    pneumatic = ps;
-    addRequirements(pneumatic);
+    feeder = fs;
+    pnuematic = ps;
+    targetSpeed = speed;
+    addRequirements(feeder);
 
   }
  
   @Override
   public void initialize() {
     
+    pnuematic.kickout();
 
   }
 
@@ -33,8 +38,7 @@ public class KickoutPistonCommand extends CommandBase {
   @Override
   public void execute() {
 
-    pneumatic.kickout();
-    Timer.delay(2);
+    feeder.runFeeder(targetSpeed);
  
   }
 

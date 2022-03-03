@@ -6,6 +6,7 @@ package frc.robot;
 
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.Joystick;
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.XboxController;
 
 import java.util.List;
@@ -33,6 +34,7 @@ import frc.robot.commands.ClimbPistonCommand;
 import frc.robot.commands.DefaultDriveCommand;
 import frc.robot.commands.KickoutPistonCommand;
 import frc.robot.commands.RunFeeder;
+import frc.robot.commands.RunFeederAuto;
 import frc.robot.commands.RunHookCommand;
 import frc.robot.commands.ShooterWithLimelight;
 import frc.robot.commands.TestColorCommand;
@@ -70,6 +72,7 @@ public class RobotContainer {
   private final ShooterWithLimelight m_shootCommand = new ShooterWithLimelight(4000, m_turretSubsystem, m_pneumaticSubsystem, m_limelightSubsystem, m_feederSubsystem);
   private final TestColorCommand m_colorTest = new TestColorCommand(m_feederSubsystem);
   private final KickoutPistonCommand m_kickoutCommand = new KickoutPistonCommand(m_pneumaticSubsystem);
+  private final RunFeederAuto m_runFeederAuto = new RunFeederAuto(.5, m_feederSubsystem, m_pneumaticSubsystem);
   public Command m_feederCommand(double speed) {
     Command m_feedCommand = new RunFeeder(speed, m_feederSubsystem, m_pneumaticSubsystem);
     return m_feedCommand;
@@ -125,7 +128,7 @@ public class RobotContainer {
     JoystickButton OperatorA = new JoystickButton(m_controller2, XboxController.Button.kA.value);
     JoystickButton OperatorB = new JoystickButton(m_controller2, XboxController.Button.kB.value);
     
-    OperatorA.whenPressed(m_shootCommand);
+    //OperatorA.whenPressed(m_shootCommand);
     //DriverB.whileHeld(m_colorTest);
 
     //Fightstick Buttons
@@ -157,12 +160,9 @@ public class RobotContainer {
     new Pose2d(0, 0, new Rotation2d(0)),
 
     List.of(
-    new Translation2d(2, 0),
-    new Translation2d(2, 2),
-    new Translation2d(0, 2),
-    new Translation2d(0, 0)
-
-    ), new Pose2d(4, 0, Rotation2d.fromDegrees(0)),
+    new Translation2d(-3, 0)
+     
+    ), new Pose2d(-6, 0, Rotation2d.fromDegrees(0)),
     trajectoryConfig);
 
     PIDController xController = new PIDController(Constants.kPXController, 0, 0);
@@ -180,10 +180,16 @@ public class RobotContainer {
     m_drivetrainSubsystem::setSwerveModuleStates, 
     m_drivetrainSubsystem);
 
-    return new SequentialCommandGroup(
-                new InstantCommand(() -> m_drivetrainSubsystem.resetOdometry(trajectory.getInitialPose())),
-                swerveControllerCommand,
-                new InstantCommand(() -> m_drivetrainSubsystem.killModules()));
+    SequentialCommandGroup DriveAuto = new SequentialCommandGroup(
+      new InstantCommand(() -> m_drivetrainSubsystem.resetOdometry(trajectory.getInitialPose())),
+      swerveControllerCommand,
+      new InstantCommand(() -> m_drivetrainSubsystem.killModules()));
+
+    SequentialCommandGroup Auto = new SequentialCommandGroup(m_kickoutCommand.withTimeout(1), m_runFeederAuto.withTimeout(1),
+    DriveAuto, m_feederCommand(0).withTimeout(1), m_shootCommand);
+
+    return Auto;
+
   }
 
   private static double deadband(double value, double deadband) {
