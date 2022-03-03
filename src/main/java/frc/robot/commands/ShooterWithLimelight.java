@@ -40,9 +40,6 @@ public class ShooterWithLimelight extends CommandBase {
     distance = limelight.getDistanceToTarget();
     //PUT ALGORITHIM HERE
  
-    
-    turret.runTurretWithVelocity(velocity);
- 
 
   }
 
@@ -50,12 +47,13 @@ public class ShooterWithLimelight extends CommandBase {
   @Override
   public void execute() {
 
+    turret.runTurretWithVelocity(velocity);
     Timer.delay(1);
     pneumatic.shooterUp();
     Timer.delay(1);
     turret.runTurretWithVelocity(0);
     pneumatic.shooterDown();
-    end(true);
+    Timer.delay(1);
  
   }
 

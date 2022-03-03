@@ -8,6 +8,10 @@ import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.XboxController;
+import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
+import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
+import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 import java.util.List;
 
@@ -22,6 +26,8 @@ import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.trajectory.Trajectory;
 import edu.wpi.first.math.trajectory.TrajectoryConfig;
 import edu.wpi.first.math.trajectory.TrajectoryGenerator;
+import edu.wpi.first.networktables.NetworkTableEntry;
+import edu.wpi.first.util.sendable.Sendable;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.FunctionalCommand;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
@@ -90,6 +96,8 @@ public class RobotContainer {
     return m_pneumaticCommand;
   }
 
+  private SendableChooser<Integer> auto = new SendableChooser<Integer>();
+
   /**
    * The container for the robot. Contains subsystems, OI devices, and commands.
    */
@@ -100,6 +108,11 @@ public class RobotContainer {
     // Left stick X axis -> left and right movement
     // Right stick X axis -> rotation
     PerpetualCommand DriveWithTurret = new PerpetualCommand(m_driveCommand.alongWith(m_turretRotateCommand)); 
+
+    auto.setDefaultOption("None", 0);
+    auto.addOption("Two Ball", 1);
+    //auto.addOption("Four Ball", 2.0);
+    SmartDashboard.putData("Choose your Auto", auto);
 
     m_drivetrainSubsystem.zeroGyroscope();
     
@@ -171,9 +184,10 @@ public class RobotContainer {
     new Pose2d(0, 0, new Rotation2d(0)),
 
     List.of(
+   
     new Translation2d(-1, 0)
-     
-    ), new Pose2d(-3, 0, Rotation2d.fromDegrees(45)),
+    
+    ), new Pose2d(-3, 0, Rotation2d.fromDegrees(-12)),
     trajectoryConfig);
 
     PIDController xController = new PIDController(Constants.kPXController, 0, 0);
@@ -196,10 +210,22 @@ public class RobotContainer {
       swerveControllerCommand,
       new InstantCommand(() -> m_drivetrainSubsystem.killModules()));
 
-    SequentialCommandGroup Auto = new SequentialCommandGroup(m_kickoutCommand.withTimeout(1), m_runFeederAuto.withTimeout(1),
-    DriveAuto, m_feederCommand(0).withTimeout(1), m_shootCommand(4000).withTimeout(4));
+    SequentialCommandGroup TwoBall = new SequentialCommandGroup(m_kickoutCommand.withTimeout(1), m_runFeederAuto.withTimeout(1),
+    DriveAuto, m_runFeederAuto.withTimeout(.5), m_feederCommand(0).withTimeout(.5), m_shootCommand(4000).withTimeout(4));
 
-    return Auto;
+    if (auto.getSelected() == 0) {
+
+      return null;
+
+    } else if (auto.getSelected() == 1) {
+
+      return TwoBall;
+
+    } else {
+
+      return null;
+
+    }
 
   }
 

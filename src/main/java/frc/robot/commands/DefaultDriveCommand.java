@@ -13,7 +13,7 @@ public class DefaultDriveCommand extends CommandBase {
     private final DoubleSupplier m_translationXSupplier;
     private final DoubleSupplier m_translationYSupplier;
     private final DoubleSupplier m_rotationSupplier;
-    private double speedMod = 1;
+    //private double speedMod = 1;
 
     public DefaultDriveCommand(DrivetrainSubsystem drivetrainSubsystem,
                                DoubleSupplier translationXSupplier,
@@ -32,18 +32,18 @@ public class DefaultDriveCommand extends CommandBase {
     public void execute() {
         // You can use `new ChassisSpeeds(...)` for robot-oriented movement instead of field-oriented movement
         
-        if(RobotContainer.m_controller.getLeftTriggerAxis() > 0){
-            speedMod = 0.2;
-        }
-        else{
-            speedMod = 1;
-        }
+        //if(RobotContainer.m_controller.getLeftTriggerAxis() > 0){
+        //    speedMod = 0.2;
+        //}
+        //else{
+        //    speedMod = 1;
+        //}
 
         m_drivetrainSubsystem.drive(
                 ChassisSpeeds.fromFieldRelativeSpeeds(
-                        m_translationXSupplier.getAsDouble() * speedMod,
-                        m_translationYSupplier.getAsDouble() * speedMod,
-                        m_rotationSupplier.getAsDouble() * speedMod,
+                        m_translationXSupplier.getAsDouble(),
+                        m_translationYSupplier.getAsDouble(),
+                        m_rotationSupplier.getAsDouble(),
                         m_drivetrainSubsystem.getGyroscopeRotation()
                 )
         );
