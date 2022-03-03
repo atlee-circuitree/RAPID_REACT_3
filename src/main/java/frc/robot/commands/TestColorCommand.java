@@ -5,6 +5,7 @@
 package frc.robot.commands;
 
 import edu.wpi.first.wpilibj.Timer;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.robot.subsystems.FeederSubsystem;
@@ -33,14 +34,6 @@ public class TestColorCommand extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-
-    if (feeder.isBlue() == true) {
-        System.out.println("Blue is Seen");
-    } else {
-        System.out.println("Red: " + feeder.printRed());
-        System.out.println("Green: " + feeder.printGreen());
-        System.out.println("Blue: " + feeder.printBlue());
-    }
  
   }
 
