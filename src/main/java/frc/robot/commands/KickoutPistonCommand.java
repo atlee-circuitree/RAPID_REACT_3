@@ -34,8 +34,7 @@ public class KickoutPistonCommand extends CommandBase {
   public void execute() {
 
     pneumatic.kickout();
-    Timer.delay(2);
- 
+   
   }
 
   @Override

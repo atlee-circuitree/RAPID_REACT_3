@@ -9,8 +9,11 @@ package frc.robot.subsystems;
 
 
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import edu.wpi.first.cameraserver.CameraServer;
+import edu.wpi.first.cscore.VideoSource;
 import edu.wpi.first.networktables.NetworkTableInstance;
 //Limelight Values
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 
  
@@ -178,7 +181,8 @@ public class LimeLightSubsystem extends SubsystemBase {
     limelightDashboard = "Limelight Horizontal/" + dbl_tx + ";";
     limelightDashboard = limelightDashboard + "Limelight Vertical/" + dbl_ty + ";";
     limelightDashboard = limelightDashboard + "Theoretical Distance To Target/" + getDistanceToTarget() + ";";
- 
+    SmartDashboard.putNumber("Limelight Distance", getDistanceToTarget());
+    
   }
 
 
@@ -189,7 +193,7 @@ public class LimeLightSubsystem extends SubsystemBase {
     double targetOffsetAngle_Vertical = ty;
 
     //how many degrees back is your limelight rotated from perfectly vertical?
-    double limelightMountAngleDegrees = 45.0;
+    double limelightMountAngleDegrees = 30.0;
 
     //distance from the center of the Limelight lens to the floor
     double limelightHeightInches = 26.0;

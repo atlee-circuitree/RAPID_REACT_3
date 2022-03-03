@@ -30,13 +30,14 @@ public final class Constants {
      * Should be measured from center to center.
      */
 
-    public static final double MAX_ACCLERATION_METERS_PER_SECOND_SQUARED = 3;
+    public static final double AUTO_MAX_ACCLERATION_METERS_PER_SECOND_SQUARED = 1;
+    public static final double AUTO_MAX_VELOCITY_METERS_PER_SECOND = 2;
 
     public static final double kPXController = 1.5;
     public static final double kPYController = 1.5;
     public static final double kPThetaController = 3;
 
-    public static final TrapezoidProfile.Constraints kThetaControllerConstraints = new TrapezoidProfile.Constraints(4000, MAX_ACCLERATION_METERS_PER_SECOND_SQUARED);
+    public static final TrapezoidProfile.Constraints kThetaControllerConstraints = new TrapezoidProfile.Constraints(4000, AUTO_MAX_ACCLERATION_METERS_PER_SECOND_SQUARED);
 
     public static final double DRIVETRAIN_WHEELBASE_METERS = .5715; // FIXME Measure and set wheelbase
  

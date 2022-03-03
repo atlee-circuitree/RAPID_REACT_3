@@ -120,9 +120,14 @@ public class RobotContainer {
     //P1 BUTTONS
     JoystickButton DriverA = new JoystickButton(m_controller, XboxController.Button.kA.value);
     JoystickButton DriverB = new JoystickButton(m_controller, XboxController.Button.kB.value);
+    JoystickButton DriverL = new JoystickButton(m_controller, XboxController.Button.kLeftBumper.value);
+    JoystickButton DriverR = new JoystickButton(m_controller, XboxController.Button.kRightBumper.value);
     
     DriverA.whileHeld(m_feederCommand(-.5));
     DriverB.whileHeld(m_feederCommand(.5));
+    //DriverL.whileHeld(m_hookCommand(-.7));
+    //DriverR.whileHeld(m_hookCommand(.7));
+
 
     //P2 BUTTONS
     JoystickButton OperatorA = new JoystickButton(m_controller2, XboxController.Button.kA.value);
@@ -154,15 +159,17 @@ public class RobotContainer {
   public Command getAutonomousCommand() {
     // An ExampleCommand will run in autonomous
 
-    TrajectoryConfig trajectoryConfig = new TrajectoryConfig(m_drivetrainSubsystem.MAX_VELOCITY_METERS_PER_SECOND, Constants.MAX_ACCLERATION_METERS_PER_SECOND_SQUARED).setKinematics(Constants.SWERVE_KINEMATICS);
+    TrajectoryConfig trajectoryConfig = new TrajectoryConfig(Constants.AUTO_MAX_VELOCITY_METERS_PER_SECOND, Constants.AUTO_MAX_ACCLERATION_METERS_PER_SECOND_SQUARED).setKinematics(Constants.SWERVE_KINEMATICS);
+
+    trajectoryConfig.setReversed(true);
 
     Trajectory trajectory = TrajectoryGenerator.generateTrajectory(
     new Pose2d(0, 0, new Rotation2d(0)),
 
     List.of(
-    new Translation2d(-3, 0)
+    new Translation2d(-1, 0)
      
-    ), new Pose2d(-6, 0, Rotation2d.fromDegrees(0)),
+    ), new Pose2d(-3, 0, Rotation2d.fromDegrees(45)),
     trajectoryConfig);
 
     PIDController xController = new PIDController(Constants.kPXController, 0, 0);
