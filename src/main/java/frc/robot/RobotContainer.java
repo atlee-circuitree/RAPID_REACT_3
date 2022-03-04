@@ -140,18 +140,20 @@ public class RobotContainer {
     JoystickButton DriverL = new JoystickButton(m_controller, XboxController.Button.kLeftBumper.value);
     JoystickButton DriverR = new JoystickButton(m_controller, XboxController.Button.kRightBumper.value);
     
-    DriverA.whileHeld(m_feederCommand(-.5));
-    DriverB.whileHeld(m_feederCommand(.5));
-    //DriverL.whileHeld(m_hookCommand(-.7));
-    //DriverR.whileHeld(m_hookCommand(.7));
+    DriverA.whileHeld(m_feederCommand(.5));
+    DriverB.whileHeld(m_feederCommand(-.5));
+    DriverL.whileHeld(m_hookCommand(-.9));
+    DriverR.whileHeld(m_hookCommand(.9));
 
 
     //P2 BUTTONS
     JoystickButton OperatorA = new JoystickButton(m_controller2, XboxController.Button.kA.value);
     JoystickButton OperatorB = new JoystickButton(m_controller2, XboxController.Button.kB.value);
+    JoystickButton OperatorX = new JoystickButton(m_controller2, XboxController.Button.kX.value);
+    JoystickButton OperatorY = new JoystickButton(m_controller2, XboxController.Button.kY.value);
     
     OperatorA.whenPressed(m_shootCommand(4000));
-    //DriverB.whileHeld(m_colorTest);
+    OperatorB.whenPressed(m_shootCommand(6400));
 
     //Fightstick Buttons
     JoystickButton FightShare = new JoystickButton(m_controller3, 7);
@@ -163,8 +165,8 @@ public class RobotContainer {
     FightL1.whenPressed(m_kickoutCommand);
     FightShare.whenPressed(m_climbPistonCommand(true));
     FightOption.whenPressed(m_climbPistonCommand(false));
-    FightL3.whileHeld(m_hookCommand(1));
-    FightR3.whileHeld(m_hookCommand(-1));
+    //FightL3.whileHeld(m_hookCommand(1));
+    //FightR3.whileHeld(m_hookCommand(-1));
 
   }
 

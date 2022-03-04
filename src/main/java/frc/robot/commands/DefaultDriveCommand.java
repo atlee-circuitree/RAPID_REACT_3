@@ -48,7 +48,7 @@ public class DefaultDriveCommand extends CommandBase {
                 )
         );
 
-        if(RobotContainer.m_controller.getLeftTriggerAxis() > 0){
+        if(RobotContainer.m_controller.getLeftTriggerAxis() > 2){
             DrivetrainSubsystem.MAX_VELOCITY_METERS_PER_SECOND = 0;
         }
     }

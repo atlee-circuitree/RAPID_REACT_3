@@ -48,7 +48,7 @@ public class ShooterWithLimelight extends CommandBase {
   public void execute() {
 
     turret.runTurretWithVelocity(velocity);
-    Timer.delay(1);
+    Timer.delay(.5);
     pneumatic.shooterUp();
     Timer.delay(1);
     turret.runTurretWithVelocity(0);
