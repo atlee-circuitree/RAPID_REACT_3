@@ -193,9 +193,9 @@ public class RobotContainer {
 
     List.of(
    
-    new Translation2d(-1, 0)
+    new Translation2d(-.75, 0)
     
-    ), new Pose2d(-3, 0, Rotation2d.fromDegrees(-12)),
+    ), new Pose2d(-1.7, 0, Rotation2d.fromDegrees(0)),
     trajectoryConfig);
 
     PIDController xController = new PIDController(Constants.kPXController, 0, 0);
@@ -219,7 +219,7 @@ public class RobotContainer {
       new InstantCommand(() -> m_drivetrainSubsystem.killModules()));
 
     SequentialCommandGroup TwoBall = new SequentialCommandGroup(m_kickoutCommand.withTimeout(1), m_runFeederAuto.withTimeout(1),
-    DriveAuto, m_feederCommand(0).withTimeout(.5), m_shootCommand(4000, 1.4).withTimeout(4));
+    DriveAuto, m_feederCommand(0).withTimeout(.5), m_shootCommand(6500, 1.4).withTimeout(4));
 
     if (auto.getSelected() == 0) {
 
