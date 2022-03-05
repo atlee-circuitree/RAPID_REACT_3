@@ -71,6 +71,10 @@ public class RobotContainer {
   public static final XboxController m_controller = new XboxController(0);
   public static final XboxController m_controller2 = new XboxController(1);
   public static final Joystick m_controller3 = new Joystick(2);
+
+  Timer shooterTime = new Timer();
+
+  double startingTime = shooterTime.get();   
  
   //Single Commands
   private final TurretRotateCommand m_turretRotateCommand = new TurretRotateCommand(m_turretSubsystem, m_limelightSubsystem, m_controller2);
@@ -79,8 +83,8 @@ public class RobotContainer {
   private final TestColorCommand m_colorTest = new TestColorCommand(m_feederSubsystem);
   private final KickoutPistonCommand m_kickoutCommand = new KickoutPistonCommand(m_pneumaticSubsystem);
   private final RunFeederAuto m_runFeederAuto = new RunFeederAuto(.5, m_feederSubsystem, m_pneumaticSubsystem);
-  public Command m_shootCommand(double velocity) {
-    Command m_shootCommand = new ShooterWithLimelight(velocity, m_turretSubsystem, m_pneumaticSubsystem, m_limelightSubsystem, m_feederSubsystem);
+  public Command m_shootCommand(double velocity, double bottomFactor) {
+    Command m_shootCommand = new ShooterWithLimelight(velocity, bottomFactor,  m_turretSubsystem, m_pneumaticSubsystem, m_limelightSubsystem, m_feederSubsystem);
     return m_shootCommand;
   }
   public Command m_feederCommand(double speed) {
@@ -152,8 +156,10 @@ public class RobotContainer {
     JoystickButton OperatorX = new JoystickButton(m_controller2, XboxController.Button.kX.value);
     JoystickButton OperatorY = new JoystickButton(m_controller2, XboxController.Button.kY.value);
     
-    OperatorA.whenPressed(m_shootCommand(4000));
-    OperatorB.whenPressed(m_shootCommand(6400));
+    OperatorA.whenPressed(m_shootCommand(6400, 1.4), false);
+    OperatorB.whenPressed(m_shootCommand(4000, 1.6), false);
+
+    //6400 12ft position
 
     //Fightstick Buttons
     JoystickButton FightShare = new JoystickButton(m_controller3, 7);
@@ -213,7 +219,7 @@ public class RobotContainer {
       new InstantCommand(() -> m_drivetrainSubsystem.killModules()));
 
     SequentialCommandGroup TwoBall = new SequentialCommandGroup(m_kickoutCommand.withTimeout(1), m_runFeederAuto.withTimeout(1),
-    DriveAuto, m_runFeederAuto.withTimeout(.5), m_feederCommand(0).withTimeout(.5), m_shootCommand(4000).withTimeout(4));
+    DriveAuto, m_feederCommand(0).withTimeout(.5), m_shootCommand(4000, 1.4).withTimeout(4));
 
     if (auto.getSelected() == 0) {
 

@@ -53,12 +53,19 @@ public class TurretSubsystem extends SubsystemBase {
     return 0;
   }
 
-  public void runTurretWithVelocity(double velocity) {
+  public void runTurretWithVelocity(double velocity, double bottomFactor) {
     //Close SZ shoot = Bottom * 1.3
     topShootMotor.set(ControlMode.Velocity, -velocity);
-    bottomShootMotor.set(ControlMode.Velocity, velocity * 1.4);
+    bottomShootMotor.set(ControlMode.Velocity, velocity * bottomFactor);
 
   }
+
+  public double checkTurretWithVelocity(double velocity) {
+    //Close SZ shoot = Bottom * 1.3
+    return topShootMotor.getSelectedSensorVelocity();
+    
+  }
+
 
   public double getVelocity() {
 

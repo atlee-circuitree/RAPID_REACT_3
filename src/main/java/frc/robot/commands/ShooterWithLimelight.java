@@ -5,6 +5,7 @@
 package frc.robot.commands;
 
 import edu.wpi.first.wpilibj.Timer;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.robot.subsystems.FeederSubsystem;
@@ -19,18 +20,23 @@ public class ShooterWithLimelight extends CommandBase {
   private final LimeLightSubsystem limelight;
   private final FeederSubsystem feeder;
   private double velocity;
+  private double bottomFactor;
   private double distance;
   private long timeout = 1000;
+  Timer shooterTime = new Timer();
 
-  public ShooterWithLimelight(double targetVelocity ,TurretSubsystem ts, PneumaticSubsystem ps, LimeLightSubsystem ls, FeederSubsystem fs) {
+  double startingTime = shooterTime.get();   
+
+  public ShooterWithLimelight(double targetVelocity, double targetBottom, TurretSubsystem ts, PneumaticSubsystem ps, LimeLightSubsystem ls, FeederSubsystem fs) {
  
     turret = ts;
     pneumatic = ps;
     limelight = ls;
     feeder = fs;
+    bottomFactor = targetBottom;
     velocity = targetVelocity;
     addRequirements(turret);
-
+    
   }
  
   @Override
@@ -39,32 +45,52 @@ public class ShooterWithLimelight extends CommandBase {
     //Limelight stuff
     distance = limelight.getDistanceToTarget();
     //PUT ALGORITHIM HERE
+    shooterTime.start();
+    shooterTime.reset();
  
-
   }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
 
-    turret.runTurretWithVelocity(velocity);
-    Timer.delay(.5);
-    pneumatic.shooterUp();
-    Timer.delay(1);
-    turret.runTurretWithVelocity(0);
-    pneumatic.shooterDown();
-    Timer.delay(1);
+    if (turret.checkTurretWithVelocity(velocity) <= velocity - 100 && shooterTime.get() < .3) {
  
+      turret.runTurretWithVelocity(velocity, bottomFactor);
+      System.out.println("RunTurret");
+
+    } else if (shooterTime.get() > .3 && shooterTime.get() < 1) {
+
+      pneumatic.shooterUp();
+
+    } else {
+
+      pneumatic.shooterDown();
+
+    }
+
+    SmartDashboard.putNumber("Timer Time", shooterTime.get());
+
   }
 
   @Override
   public void end(boolean interrupted) {
+
      
   }
 
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-   return false;
+    if  (shooterTime.get() > 1.25) {
+
+      turret.runTurretWithVelocity(0, 1.4);
+      return true;
+
+    } else {
+      return false;
+
+    } 
+ 
   }
 }
