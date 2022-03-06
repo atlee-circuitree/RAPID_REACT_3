@@ -9,13 +9,13 @@ import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.LimeLightSubsystem;
 import frc.robot.subsystems.TurretSubsystem;
 
-public class TurretRotateCommand extends CommandBase {
+public class TurretAuto extends CommandBase {
   
   private final TurretSubsystem turret;
   private final LimeLightSubsystem limelight;
   private XboxController xbox;
 
-  public TurretRotateCommand(TurretSubsystem ts, LimeLightSubsystem lim, XboxController xboxController) {
+  public TurretAuto(TurretSubsystem ts, LimeLightSubsystem lim, XboxController xboxController) {
 
     turret = ts;
     limelight = lim;

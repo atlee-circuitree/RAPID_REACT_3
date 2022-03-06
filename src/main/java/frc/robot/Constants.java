@@ -30,8 +30,10 @@ public final class Constants {
      * Should be measured from center to center.
      */
 
-    public static final double AUTO_MAX_ACCLERATION_METERS_PER_SECOND_SQUARED = 1;
-    public static final double AUTO_MAX_VELOCITY_METERS_PER_SECOND = 2;
+    public static final double LIMELIGHT_TX_OFFSET = 3.18;
+
+    public static final double AUTO_MAX_ACCLERATION_METERS_PER_SECOND_SQUARED = 2;
+    public static final double AUTO_MAX_VELOCITY_METERS_PER_SECOND = 1;
 
     public static final double kPXController = 1.5;
     public static final double kPYController = 1.5;
@@ -44,12 +46,12 @@ public final class Constants {
     public static final int FRONT_LEFT_MODULE_DRIVE_MOTOR = 4; // FIXME Set front left module drive motor ID
     public static final int FRONT_LEFT_MODULE_STEER_MOTOR = 3; // FIXME Set front left module steer motor ID
     public static final int FRONT_LEFT_MODULE_STEER_ENCODER = 11; // FIXME Set front left steer encoder ID
-    public static final double FRONT_LEFT_MODULE_STEER_OFFSET = -Math.toRadians(179.82421875); // FIXME Measure and set front left steer offset
+    public static final double FRONT_LEFT_MODULE_STEER_OFFSET = -Math.toRadians(162.68); // FIXME Measure and set front left steer offset
 
     public static final int FRONT_RIGHT_MODULE_DRIVE_MOTOR = 2; // FIXME Set front right drive motor ID
     public static final int FRONT_RIGHT_MODULE_STEER_MOTOR = 1; // FIXME Set front right steer motor ID
     public static final int FRONT_RIGHT_MODULE_STEER_ENCODER = 9; // FIXME Set front right steer encoder ID
-    public static final double FRONT_RIGHT_MODULE_STEER_OFFSET = -Math.toRadians(290.0390625); // FIXME Measure and set front right steer offset
+    public static final double FRONT_RIGHT_MODULE_STEER_OFFSET = -Math.toRadians(310.60); // FIXME Measure and set front right steer offset
 
     public static final int BACK_LEFT_MODULE_DRIVE_MOTOR = 6; // FIXME Set back left drive motor ID
     public static final int BACK_LEFT_MODULE_STEER_MOTOR = 5; // FIXME Set back left steer motor ID

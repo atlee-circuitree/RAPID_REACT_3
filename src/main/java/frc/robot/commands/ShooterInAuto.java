@@ -16,7 +16,7 @@ import frc.robot.subsystems.LimeLightSubsystem;
 import frc.robot.subsystems.PneumaticSubsystem;
 import frc.robot.subsystems.TurretSubsystem;
 
-public class ShooterWithLimelight extends CommandBase {
+public class ShooterInAuto extends CommandBase {
    
   private final TurretSubsystem turret;
   private final PneumaticSubsystem pneumatic;
@@ -30,7 +30,7 @@ public class ShooterWithLimelight extends CommandBase {
 
   double startingTime = shooterTime.get();   
 
-  public ShooterWithLimelight(double targetVelocity, double targetBottom, TurretSubsystem ts, PneumaticSubsystem ps, LimeLightSubsystem ls, FeederSubsystem fs) {
+  public ShooterInAuto(double targetVelocity, double targetBottom, TurretSubsystem ts, PneumaticSubsystem ps, LimeLightSubsystem ls, FeederSubsystem fs) {
  
     turret = ts;
     pneumatic = ps;
@@ -57,22 +57,16 @@ public class ShooterWithLimelight extends CommandBase {
   @Override
   public void execute() {
 
-    if (Math.abs(turret.checkTurretWithVelocity(velocity) - velocity) >= 100 && shooterTime.get() < .5) {
- 
+    
       turret.runTurretWithVelocity(velocity, bottomVelocity);
-      
-    } else if (shooterTime.get() < 1.2) {
-
+      Timer.delay(1);
       pneumatic.shooterUp();
-
-    } else {
-
+      Timer.delay(1.5);
       pneumatic.shooterDown();
+      Timer.delay(1);
+      turret.runTurretWithVelocity(0, bottomVelocity);
 
-    }
-
-    SmartDashboard.putNumber("Timer Time", shooterTime.get());
-
+    
   }
 
   @Override

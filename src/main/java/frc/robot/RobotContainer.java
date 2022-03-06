@@ -10,10 +10,12 @@ import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
+import edu.wpi.first.wpilibj.simulation.JoystickSim;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 import java.util.List;
+import java.util.function.BooleanSupplier;
 
 import org.ejml.dense.block.MatrixOps_DDRB;
 
@@ -36,15 +38,19 @@ import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.SwerveControllerCommand;
 import edu.wpi.first.wpilibj2.command.button.Button;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
+import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.commands.ClimbPistonCommand;
 import frc.robot.commands.DefaultDriveCommand;
 import frc.robot.commands.KickoutPistonCommand;
 import frc.robot.commands.RunFeeder;
 import frc.robot.commands.RunFeederAuto;
 import frc.robot.commands.RunHookCommand;
+import frc.robot.commands.ShooterInAuto;
 import frc.robot.commands.ShooterWithLimelight;
 import frc.robot.commands.TestColorCommand;
+import frc.robot.commands.TurretAuto;
 import frc.robot.commands.TurretRotateCommand;
+import frc.robot.subsystems.CameraSubsystem;
 import frc.robot.subsystems.DrivetrainSubsystem;
 import frc.robot.subsystems.FeederSubsystem;
 import frc.robot.subsystems.LimeLightSubsystem;
@@ -67,6 +73,7 @@ public class RobotContainer {
   private final PneumaticSubsystem m_pneumaticSubsystem = new PneumaticSubsystem();
   private final LimeLightSubsystem m_limelightSubsystem = new LimeLightSubsystem();
   private final FeederSubsystem m_feederSubsystem = new FeederSubsystem();
+  private final CameraSubsystem cameraSubsystem = new CameraSubsystem();
    
   public static final XboxController m_controller = new XboxController(0);
   public static final XboxController m_controller2 = new XboxController(1);
@@ -83,10 +90,25 @@ public class RobotContainer {
   private final TestColorCommand m_colorTest = new TestColorCommand(m_feederSubsystem);
   private final KickoutPistonCommand m_kickoutCommand = new KickoutPistonCommand(m_pneumaticSubsystem);
   private final RunFeederAuto m_runFeederAuto = new RunFeederAuto(.5, m_feederSubsystem, m_pneumaticSubsystem);
+
   public Command m_shootCommand(double velocity, double bottomFactor) {
-    Command m_shootCommand = new ShooterWithLimelight(velocity, bottomFactor,  m_turretSubsystem, m_pneumaticSubsystem, m_limelightSubsystem, m_feederSubsystem);
+    //Command m_shootCommand = new ShooterWithLimelight(SmartDashboard.getNumber("Turret Velocity", 0), SmartDashboard.getNumber("Turret Bottom Mod", 0),  m_turretSubsystem, m_pneumaticSubsystem, m_limelightSubsystem, m_feederSubsystem);
+    Command m_shootCommand = new ShooterWithLimelight(velocity, bottomFactor, m_turretSubsystem, m_pneumaticSubsystem, m_limelightSubsystem, m_feederSubsystem);
     return m_shootCommand;
   }
+
+  public Command m_shootAutoCommand(double velocity, double bottomFactor) {
+    //Command m_shootCommand = new ShooterWithLimelight(SmartDashboard.getNumber("Turret Velocity", 0), SmartDashboard.getNumber("Turret Bottom Mod", 0),  m_turretSubsystem, m_pneumaticSubsystem, m_limelightSubsystem, m_feederSubsystem);
+    Command m_shootCommand = new ShooterInAuto(velocity, bottomFactor, m_turretSubsystem, m_pneumaticSubsystem, m_limelightSubsystem, m_feederSubsystem);
+    return m_shootCommand;
+  }
+
+  public Command m_TurretAutoCommand() {
+    //Command m_shootCommand = new ShooterWithLimelight(SmartDashboard.getNumber("Turret Velocity", 0), SmartDashboard.getNumber("Turret Bottom Mod", 0),  m_turretSubsystem, m_pneumaticSubsystem, m_limelightSubsystem, m_feederSubsystem);
+    Command m_turretCommand = new TurretAuto( m_turretSubsystem, m_limelightSubsystem, null); 
+    return m_turretCommand;
+  }
+
   public Command m_feederCommand(double speed) {
     Command m_feedCommand = new RunFeeder(speed, m_feederSubsystem, m_pneumaticSubsystem);
     return m_feedCommand;
@@ -113,10 +135,15 @@ public class RobotContainer {
     // Right stick X axis -> rotation
     PerpetualCommand DriveWithTurret = new PerpetualCommand(m_driveCommand.alongWith(m_turretRotateCommand)); 
 
-    auto.setDefaultOption("None", 0);
-    auto.addOption("Two Ball", 1);
+    
+    //auto.setDefaultOption("TwoBall", 1);
+    //auto.addOption("None", 0);
     //auto.addOption("Four Ball", 2.0);
     SmartDashboard.putData("Choose your Auto", auto);
+    double smartVelocity = SmartDashboard.getNumber("Turret Velocity", 0);
+    SmartDashboard.putNumber("Turret Velocity", smartVelocity);
+    double smartBottomMotorMod = SmartDashboard.getNumber("Turret Bottom Mod", 1);
+    SmartDashboard.putNumber("Turret Bottom Mod", smartBottomMotorMod);
 
     m_drivetrainSubsystem.zeroGyroscope();
     
@@ -143,12 +170,43 @@ public class RobotContainer {
     JoystickButton DriverB = new JoystickButton(m_controller, XboxController.Button.kB.value);
     JoystickButton DriverL = new JoystickButton(m_controller, XboxController.Button.kLeftBumper.value);
     JoystickButton DriverR = new JoystickButton(m_controller, XboxController.Button.kRightBumper.value);
+    BooleanSupplier isDriverLTPressed = new BooleanSupplier() {
+      
+      @Override
+      public boolean getAsBoolean() {
+        if(m_controller.getLeftTriggerAxis() > 0.1){
+          return true;
+        }
+        else{
+          return false;
+        }
+      }
+
+    };
+
+    BooleanSupplier isDriverRTPressed = new BooleanSupplier() {
+      
+      @Override
+      public boolean getAsBoolean() {
+        if(m_controller.getRightTriggerAxis() > 0.1){
+          return true;
+        }
+        else{
+          return false;
+        }
+      }
+
+    };
     
-    DriverA.whileHeld(m_feederCommand(.5));
-    DriverB.whileHeld(m_feederCommand(-.5));
+    Trigger DriverLT = new Trigger(isDriverLTPressed);
+    Trigger DriverRT = new Trigger(isDriverRTPressed);
+    
+    DriverLT.whileActiveContinuous(m_feederCommand(-.5));
+    DriverRT.whileActiveContinuous(m_feederCommand(.5));
+    //DriverA.whileHeld(m_feederCommand(.5));
+    //DriverB.whileHeld(m_feederCommand(-.5));
     DriverL.whileHeld(m_hookCommand(-.9));
     DriverR.whileHeld(m_hookCommand(.9));
-
 
     //P2 BUTTONS
     JoystickButton OperatorA = new JoystickButton(m_controller2, XboxController.Button.kA.value);
@@ -156,9 +214,15 @@ public class RobotContainer {
     JoystickButton OperatorX = new JoystickButton(m_controller2, XboxController.Button.kX.value);
     JoystickButton OperatorY = new JoystickButton(m_controller2, XboxController.Button.kY.value);
     
-    OperatorA.whenPressed(m_shootCommand(6400, 1.4), false);
-    OperatorB.whenPressed(m_shootCommand(4000, 1.6), false);
+    //Velocity: 6400 Bottom: 1.4 Limelight: 101.3
+    //Veocity: 7500 Bottom: 1.4 Limelight: 124.4
+    OperatorA.whenPressed(m_shootCommand(6400, 8960), false);
+    
+    OperatorB.whenPressed(m_shootCommand(7500, 10000), false);
 
+    OperatorY.whenPressed(m_shootCommand(SmartDashboard.getNumber("Turret Velocity", 4000), SmartDashboard.getNumber("Turret Bottom Mod", 1.4)), false);
+
+    OperatorX.whenPressed(m_shootCommand(12000, 8000), false);
     //6400 12ft position
 
     //Fightstick Buttons
@@ -169,10 +233,10 @@ public class RobotContainer {
     JoystickButton FightL1 = new JoystickButton(m_controller3, 5);
 
     FightL1.whenPressed(m_kickoutCommand);
-    FightShare.whenPressed(m_climbPistonCommand(true));
-    FightOption.whenPressed(m_climbPistonCommand(false));
-    //FightL3.whileHeld(m_hookCommand(1));
-    //FightR3.whileHeld(m_hookCommand(-1));
+    //FightShare.whenPressed(m_climbPistonCommand(true));
+    //FightOption.whenPressed(m_climbPistonCommand(false));
+    FightL3.whenPressed(m_climbPistonCommand(true));
+    FightR3.whenPressed(m_climbPistonCommand(false));
 
   }
 
@@ -188,15 +252,25 @@ public class RobotContainer {
 
     trajectoryConfig.setReversed(true);
 
+    /*Trajectory trajectory = TrajectoryGenerator.generateTrajectory(
+    new Pose2d(0, 0, new Rotation2d(0)),
+
+    List.of(
+   
+    new Translation2d(-1, 0)
+    //DOUBLE DISTANCE THAT THIS SHOULD BE GOING
+    ), new Pose2d(-3, 0, Rotation2d.fromDegrees(0)),
+    trajectoryConfig); */
+
     Trajectory trajectory = TrajectoryGenerator.generateTrajectory(
     new Pose2d(0, 0, new Rotation2d(0)),
 
     List.of(
    
-    new Translation2d(-.75, 0)
-    
-    ), new Pose2d(-1.7, 0, Rotation2d.fromDegrees(0)),
-    trajectoryConfig);
+    new Translation2d(-1, 0)
+    //DOUBLE DISTANCE THAT THIS SHOULD BE GOING
+    ), new Pose2d(-1.8, 0, Rotation2d.fromDegrees(0)),
+    trajectoryConfig); 
 
     PIDController xController = new PIDController(Constants.kPXController, 0, 0);
     PIDController yController = new PIDController(Constants.kPYController, 0, 0);
@@ -218,10 +292,13 @@ public class RobotContainer {
       swerveControllerCommand,
       new InstantCommand(() -> m_drivetrainSubsystem.killModules()));
 
-    SequentialCommandGroup TwoBall = new SequentialCommandGroup(m_kickoutCommand.withTimeout(1), m_runFeederAuto.withTimeout(1),
-    DriveAuto, m_feederCommand(0).withTimeout(.5), m_shootCommand(6500, 1.4).withTimeout(4));
+    //SequentialCommandGroup TwoBall = new SequentialCommandGroup(m_kickoutCommand.withTimeout(1), m_runFeederAuto.withTimeout(1),
+    //DriveAuto.withTimeout(5), new TurretRotateCommand(m_turretSubsystem, m_limelightSubsystem, m_controller).withTimeout(2), m_shootAutoCommand(7500, 1.5), m_shootAutoCommand(6500, 1.4));
 
-    if (auto.getSelected() == 0) {
+    SequentialCommandGroup TwoBallShootFirst = new SequentialCommandGroup(m_kickoutCommand.withTimeout(1), new TurretRotateCommand(m_turretSubsystem, m_limelightSubsystem, m_controller).withTimeout(2), m_shootAutoCommand(6400, 9000), m_runFeederAuto.withTimeout(1),
+    DriveAuto.withTimeout(5), new TurretRotateCommand(m_turretSubsystem, m_limelightSubsystem, m_controller).withTimeout(2),  m_shootAutoCommand(7800, 10000) );
+
+    /*if (auto.getSelected() == 0) {
 
       return null;
 
@@ -233,7 +310,9 @@ public class RobotContainer {
 
       return null;
 
-    }
+    } */
+
+    return TwoBallShootFirst;
 
   }
 

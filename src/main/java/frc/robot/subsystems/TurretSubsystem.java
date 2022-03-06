@@ -15,6 +15,7 @@ import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.wpilibj.AnalogEncoder;
 import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj.PWM;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.Constants;
 
 public class TurretSubsystem extends SubsystemBase {
@@ -37,12 +38,19 @@ public class TurretSubsystem extends SubsystemBase {
     turretMotor = new CANSparkMax(Constants.turretMotorPort, MotorType.kBrushed);
     turretEncoder = new Encoder(0, 1);
     turretCoder = new AnalogEncoder(0);
+
+    double smartVelocity = SmartDashboard.getNumber("Turret Velocity", 0);
+    SmartDashboard.putNumber("Turret Velocity", smartVelocity);
+    double smartBottomMotorMod = SmartDashboard.getNumber("Turret Bottom Mod", 1);
+    SmartDashboard.putNumber("Turret Bottom Mod", smartBottomMotorMod);
   
   }
 
   @Override
   public void periodic() {
    
+    
+
   }
 
   protected void useOutput(double output, double setpoint) {
@@ -53,10 +61,10 @@ public class TurretSubsystem extends SubsystemBase {
     return 0;
   }
 
-  public void runTurretWithVelocity(double velocity, double bottomFactor) {
+  public void runTurretWithVelocity(double topVelocity, double bottomVelocity) {
     //Close SZ shoot = Bottom * 1.3
-    topShootMotor.set(ControlMode.Velocity, -velocity);
-    bottomShootMotor.set(ControlMode.Velocity, velocity * bottomFactor);
+    topShootMotor.set(ControlMode.Velocity, -topVelocity);
+    bottomShootMotor.set(ControlMode.Velocity, bottomVelocity);
 
   }
 

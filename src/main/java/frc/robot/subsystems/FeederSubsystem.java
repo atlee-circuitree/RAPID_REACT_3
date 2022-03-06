@@ -53,7 +53,7 @@ public class FeederSubsystem extends SubsystemBase {
 
     }
 
-    if (colorSensor.getRed() > 2000 && colorSensor.getRed() < 3400) {
+    if (colorSensor.getRed() > 550 && colorSensor.getRed() < 5000 && colorSensor.getRed() > colorSensor.getBlue()) {
 
       IsRed = true;
        
@@ -61,9 +61,11 @@ public class FeederSubsystem extends SubsystemBase {
 
       IsRed = false;
 
+  
+
     }
 
-    if (colorSensor.getBlue() > 2300 && colorSensor.getBlue() < 4000) {
+    if (colorSensor.getBlue() > 550 && colorSensor.getBlue() < 5000 && colorSensor.getBlue() > colorSensor.getRed()) {
 
       IsBlue = true;
        

@@ -9,8 +9,8 @@ package frc.robot.subsystems;
 
 
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.Constants;
 import edu.wpi.first.cameraserver.CameraServer;
-import edu.wpi.first.cscore.VideoSource;
 import edu.wpi.first.networktables.NetworkTableInstance;
 //Limelight Values
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -29,6 +29,7 @@ public class LimeLightSubsystem extends SubsystemBase {
   double m_LimelightDriveCommand = 0.0;
   double m_LimelightSteerCommand = 0.0;
 
+
   // Local variables to store network values
   boolean b_tv = false;
   double dbl_tx, dbl_tv, dbl_ty, dbl_ta, dbl_ts, dbl_thor, dbl_tvert, dbl_tshort, dbl_tlong;
@@ -42,7 +43,7 @@ public class LimeLightSubsystem extends SubsystemBase {
   }
 
   public double HorizontalOffset() {
-    return dbl_tx;
+    return dbl_tx + Constants.LIMELIGHT_TX_OFFSET;
   }
 
   public double TargetArea() {
@@ -90,7 +91,6 @@ public class LimeLightSubsystem extends SubsystemBase {
   public LimeLightSubsystem() {
   
     NetworkTableInstance.getDefault().getTable("limelight").getEntry("ledMode").setNumber(1); //Set LEDs to current pipeline setting
-    
   }
 
   public void EnableLED()
@@ -148,18 +148,18 @@ public class LimeLightSubsystem extends SubsystemBase {
     m_LimelightDriveCommand = drive_cmd;
 
 
-    System.out.print("tv: ");
-    System.out.print(tv);
-    System.out.print(" tx ");
-    System.out.print(tx);
-    System.out.print(" ty ");
-    System.out.print(ty);
-    System.out.print(" ta ");
-    System.out.print(ta);
-    System.out.print(" steer ");
-    System.out.print(m_LimelightSteerCommand);
-    System.out.print(" drive ");
-    System.out.print(m_LimelightDriveCommand);
+    //System.out.print("tv: ");
+    //System.out.print(tv);
+    //System.out.print(" tx ");
+    //System.out.print(tx);
+    //System.out.print(" ty ");
+    //System.out.print(ty);
+    //System.out.print(" ta ");
+    //System.out.print(ta);
+    //System.out.print(" steer ");
+    //System.out.print(m_LimelightSteerCommand);
+    //System.out.print(" drive ");
+    //System.out.print(m_LimelightDriveCommand);
 
   }
 
