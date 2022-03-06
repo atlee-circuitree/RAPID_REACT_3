@@ -296,7 +296,10 @@ public class RobotContainer {
     //DriveAuto.withTimeout(5), new TurretRotateCommand(m_turretSubsystem, m_limelightSubsystem, m_controller).withTimeout(2), m_shootAutoCommand(7500, 1.5), m_shootAutoCommand(6500, 1.4));
 
     SequentialCommandGroup TwoBallShootFirst = new SequentialCommandGroup(m_kickoutCommand.withTimeout(1), new TurretRotateCommand(m_turretSubsystem, m_limelightSubsystem, m_controller).withTimeout(2), m_shootAutoCommand(6400, 9000), m_runFeederAuto.withTimeout(1),
-    DriveAuto.withTimeout(5), new TurretRotateCommand(m_turretSubsystem, m_limelightSubsystem, m_controller).withTimeout(2),  m_shootAutoCommand(7800, 10000) );
+    DriveAuto.withTimeout(5), new TurretRotateCommand(m_turretSubsystem, m_limelightSubsystem, m_controller).withTimeout(2), m_shootAutoCommand(12000, 8000) );
+
+    //SequentialCommandGroup TwoBallShootFirstThreeShoot = new SequentialCommandGroup(m_kickoutCommand.withTimeout(1), new TurretRotateCommand(m_turretSubsystem, m_limelightSubsystem, m_controller).withTimeout(2), m_shootAutoCommand(6400, 9000), m_runFeederAuto.withTimeout(1),
+    //DriveAuto.withTimeout(5), new TurretRotateCommand(m_turretSubsystem, m_limelightSubsystem, m_controller).withTimeout(2), m_shootAutoCommand(12000, 8000), m_shootAutoCommand(12000, 8000), m_shootAutoCommand(12000, 8000) );
 
     /*if (auto.getSelected() == 0) {
 
