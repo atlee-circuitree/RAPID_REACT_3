@@ -47,7 +47,6 @@ import frc.robot.commands.RunFeederAuto;
 import frc.robot.commands.RunHookCommand;
 import frc.robot.commands.ShooterInAuto;
 import frc.robot.commands.ShooterWithLimelight;
-import frc.robot.commands.TestColorCommand;
 import frc.robot.commands.TurretAuto;
 import frc.robot.commands.TurretRotateCommand;
 import frc.robot.subsystems.CameraSubsystem;
@@ -87,7 +86,6 @@ public class RobotContainer {
   private final TurretRotateCommand m_turretRotateCommand = new TurretRotateCommand(m_turretSubsystem, m_limelightSubsystem, m_controller2);
   private final DefaultDriveCommand m_driveCommand = new DefaultDriveCommand(m_drivetrainSubsystem,() -> -modifyAxis(m_controller.getLeftY()) * DrivetrainSubsystem.MAX_VELOCITY_METERS_PER_SECOND,() -> -modifyAxis(m_controller.getLeftX()) * DrivetrainSubsystem.MAX_VELOCITY_METERS_PER_SECOND,() -> -modifyAxis(m_controller.getRightX()) * DrivetrainSubsystem.MAX_ANGULAR_VELOCITY_RADIANS_PER_SECOND);
   //private final ShooterWithLimelight m_shootCommand = new ShooterWithLimelight(4000, m_turretSubsystem, m_pneumaticSubsystem, m_limelightSubsystem, m_feederSubsystem);
-  private final TestColorCommand m_colorTest = new TestColorCommand(m_feederSubsystem);
   private final KickoutPistonCommand m_kickoutCommand = new KickoutPistonCommand(m_pneumaticSubsystem);
   private final RunFeederAuto m_runFeederAuto = new RunFeederAuto(.5, m_feederSubsystem, m_pneumaticSubsystem);
 
@@ -220,9 +218,9 @@ public class RobotContainer {
     
     OperatorB.whenPressed(m_shootCommand(7500, 10000), false);
 
-    OperatorY.whenPressed(m_shootCommand(SmartDashboard.getNumber("Turret Velocity", 4000), SmartDashboard.getNumber("Turret Bottom Mod", 1.4)), false);
+    OperatorY.whenPressed(m_shootCommand(12000, 8000), false);
 
-    OperatorX.whenPressed(m_shootCommand(12000, 8000), false);
+    OperatorX.whenPressed(m_shootCommand(4000, 6000), false);
     //6400 12ft position
 
     //Fightstick Buttons
@@ -234,7 +232,7 @@ public class RobotContainer {
 
     FightL1.whenPressed(m_kickoutCommand);
     //FightShare.whenPressed(m_climbPistonCommand(true));
-    //FightOption.whenPressed(m_climbPistonCommand(false));
+    FightOption.whenPressed(new KickoutPistonCommand(m_pneumaticSubsystem));
     FightL3.whenPressed(m_climbPistonCommand(true));
     FightR3.whenPressed(m_climbPistonCommand(false));
 
@@ -269,7 +267,7 @@ public class RobotContainer {
    
     new Translation2d(-1, 0)
     //DOUBLE DISTANCE THAT THIS SHOULD BE GOING
-    ), new Pose2d(-1.8, 0, Rotation2d.fromDegrees(0)),
+    ), new Pose2d(-3, 0, Rotation2d.fromDegrees(0)),
     trajectoryConfig); 
 
     PIDController xController = new PIDController(Constants.kPXController, 0, 0);
@@ -295,8 +293,8 @@ public class RobotContainer {
     //SequentialCommandGroup TwoBall = new SequentialCommandGroup(m_kickoutCommand.withTimeout(1), m_runFeederAuto.withTimeout(1),
     //DriveAuto.withTimeout(5), new TurretRotateCommand(m_turretSubsystem, m_limelightSubsystem, m_controller).withTimeout(2), m_shootAutoCommand(7500, 1.5), m_shootAutoCommand(6500, 1.4));
 
-    SequentialCommandGroup TwoBallShootFirst = new SequentialCommandGroup(m_kickoutCommand.withTimeout(1), new TurretRotateCommand(m_turretSubsystem, m_limelightSubsystem, m_controller).withTimeout(2), m_shootAutoCommand(6400, 9000), m_runFeederAuto.withTimeout(1),
-    DriveAuto.withTimeout(5), new TurretRotateCommand(m_turretSubsystem, m_limelightSubsystem, m_controller).withTimeout(2), m_shootAutoCommand(12000, 8000) );
+    SequentialCommandGroup TwoBallShootFirst = new SequentialCommandGroup(m_kickoutCommand.withTimeout(1), new TurretRotateCommand(m_turretSubsystem, m_limelightSubsystem, m_controller).withTimeout(2), m_runFeederAuto.withTimeout(1),
+    DriveAuto.withTimeout(2), new TurretRotateCommand(m_turretSubsystem, m_limelightSubsystem, m_controller).withTimeout(2));
 
     //SequentialCommandGroup TwoBallShootFirstThreeShoot = new SequentialCommandGroup(m_kickoutCommand.withTimeout(1), new TurretRotateCommand(m_turretSubsystem, m_limelightSubsystem, m_controller).withTimeout(2), m_shootAutoCommand(6400, 9000), m_runFeederAuto.withTimeout(1),
     //DriveAuto.withTimeout(5), new TurretRotateCommand(m_turretSubsystem, m_limelightSubsystem, m_controller).withTimeout(2), m_shootAutoCommand(12000, 8000), m_shootAutoCommand(12000, 8000), m_shootAutoCommand(12000, 8000) );
