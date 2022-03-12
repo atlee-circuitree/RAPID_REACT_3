@@ -5,6 +5,7 @@
 package frc.robot.commands;
 
 import edu.wpi.first.wpilibj.XboxController;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.LimeLightSubsystem;
 import frc.robot.subsystems.TurretSubsystem;
@@ -29,6 +30,7 @@ public class TurretRotateCommand extends CommandBase {
   public void initialize() {
 
    limelight.EnableLED();
+   
 
   }
 
@@ -49,9 +51,7 @@ public class TurretRotateCommand extends CommandBase {
     else{
       turret.turnTurret(0);
     }
-
-    //System.out.println(limelight.HorizontalOffset());
-
+ 
   }
 
   

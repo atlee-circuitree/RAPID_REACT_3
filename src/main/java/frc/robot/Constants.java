@@ -33,15 +33,30 @@ public final class Constants {
     public static final double LIMELIGHT_TX_OFFSET = 3.18;
 
     public static final double AUTO_MAX_ACCLERATION_METERS_PER_SECOND_SQUARED = 2;
-    public static final double AUTO_MAX_VELOCITY_METERS_PER_SECOND = 1;
+    //public static final double AUTO_MAX_ACCLERATION_METERS_PER_SECOND_SQUARED = 1;
+    public static final double AUTO_MAX_VELOCITY_METERS_PER_SECOND = 2;
 
-    public static final double kPXController = 1.5;
-    public static final double kPYController = 1.5;
-    public static final double kPThetaController = 3;
+    
+    //public static final double AUTO_MAX_ACCLERATION_METERS_PER_SECOND_SQUARED = 3.4422;
+    //public static final double AUTO_MAX_VELOCITY_METERS_PER_SECOND = 7;
 
-    public static final TrapezoidProfile.Constraints kThetaControllerConstraints = new TrapezoidProfile.Constraints(4000, AUTO_MAX_ACCLERATION_METERS_PER_SECOND_SQUARED);
+    //Values gained from Characterization
+    //public static final double kPXController = 0.01809;
+    //public static final double kPYController = 0.01809;
+    
+    //public static final double kPXController = 0.061809;
+    //public static final double kPYController = 0.061809;
+    public static final double kPXController = 0.067365;
+    public static final double kPYController = 0.067365;
+    //This was 3, revert back to 3 if something goes wrong
+    public static final double kPThetaController = 1.5;
+
+   //public static final TrapezoidProfile.Constraints kThetaControllerConstraints = new TrapezoidProfile.Constraints(4000, AUTO_MAX_ACCLERATION_METERS_PER_SECOND_SQUARED);
+   public static final TrapezoidProfile.Constraints kThetaControllerConstraints = new TrapezoidProfile.Constraints(AUTO_MAX_VELOCITY_METERS_PER_SECOND, AUTO_MAX_ACCLERATION_METERS_PER_SECOND_SQUARED);
 
     public static final double DRIVETRAIN_WHEELBASE_METERS = .5715; // FIXME Measure and set wheelbase
+
+    public static final double TURRET_ENCODER_CHANGE_TICKS_TO_DEGREES = 1;
  
     public static final int FRONT_LEFT_MODULE_DRIVE_MOTOR = 4; // FIXME Set front left module drive motor ID
     public static final int FRONT_LEFT_MODULE_STEER_MOTOR = 3; // FIXME Set front left module steer motor ID

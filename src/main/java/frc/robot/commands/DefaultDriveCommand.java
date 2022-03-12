@@ -1,6 +1,7 @@
 package frc.robot.commands;
 
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
+import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.RobotContainer;
 import frc.robot.subsystems.DrivetrainSubsystem;
@@ -38,6 +39,8 @@ public class DefaultDriveCommand extends CommandBase {
         //else{
         //    speedMod = 1;
         //}
+ 
+        
 
         m_drivetrainSubsystem.drive(
                 ChassisSpeeds.fromFieldRelativeSpeeds(
@@ -48,10 +51,32 @@ public class DefaultDriveCommand extends CommandBase {
                 )
         );
 
-        if(RobotContainer.m_controller.getLeftTriggerAxis() > 2){
-            DrivetrainSubsystem.MAX_VELOCITY_METERS_PER_SECOND = 0;
-        }
+        
+/*
+        if(RobotContainer.m_controller.getLeftBumper() == true) {
+
+            m_drivetrainSubsystem.drive(
+                new ChassisSpeeds(
+                    m_translationXSupplier.getAsDouble(),
+                    m_translationYSupplier.getAsDouble(), 
+                    m_rotationSupplier.getAsDouble()
+                )
+        );
+            
+        } else {
+
+            m_drivetrainSubsystem.drive(
+                ChassisSpeeds.fromFieldRelativeSpeeds(
+                    m_translationXSupplier.getAsDouble(),
+                    m_translationYSupplier.getAsDouble(),
+                    m_rotationSupplier.getAsDouble(),
+                    m_drivetrainSubsystem.getGyroscopeRotation()
+                )
+        );
+*/
+
     }
+
 
     @Override
     public void end(boolean interrupted) {

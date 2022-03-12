@@ -8,7 +8,10 @@ import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.SensorCollection;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 import com.revrobotics.CANSparkMax;
+import com.revrobotics.EncoderType;
+import com.revrobotics.RelativeEncoder;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
+import com.revrobotics.SparkMaxRelativeEncoder.Type;
 
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.math.controller.PIDController;
@@ -17,16 +20,14 @@ import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj.PWM;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.Constants;
+import frc.robot.dependents.AbsoluteEncoder;
 
 public class TurretSubsystem extends SubsystemBase {
    
   TalonSRX topShootMotor = null;
   TalonSRX bottomShootMotor = null;
-  
   CANSparkMax turretMotor = null;
-  Encoder turretEncoder = null;
-  PWM pwmEncoder;
-  AnalogEncoder turretCoder;
+  RelativeEncoder turretEncoder = null;
 
   public static String turretDashboard;
 
@@ -35,26 +36,36 @@ public class TurretSubsystem extends SubsystemBase {
     topShootMotor = new TalonSRX(Constants.topShooterMotorPort);
     bottomShootMotor = new TalonSRX(Constants.bottomShooterMotorPort);
     
-    turretMotor = new CANSparkMax(Constants.turretMotorPort, MotorType.kBrushed);
-    turretEncoder = new Encoder(0, 1);
-    turretCoder = new AnalogEncoder(0);
-
+    turretMotor = new CANSparkMax(Constants.turretMotorPort, MotorType.kBrushless);
+       
+    
+    
     double smartVelocity = SmartDashboard.getNumber("Turret Velocity", 0);
     SmartDashboard.putNumber("Turret Velocity", smartVelocity);
     double smartBottomMotorMod = SmartDashboard.getNumber("Turret Bottom Mod", 1);
     SmartDashboard.putNumber("Turret Bottom Mod", smartBottomMotorMod);
+
+    turretEncoder = turretMotor.getEncoder(Type.kHallSensor, 42);
   
   }
 
   @Override
   public void periodic() {
-   
+
     
+    SmartDashboard.putNumber("Turret Angle", getTurretEncoder());
 
   }
 
   protected void useOutput(double output, double setpoint) {
     turretMotor.set(output);
+  }
+
+  
+  public double getTurretEncoder() {
+
+    return turretEncoder.getPosition() / Constants.TURRET_ENCODER_CHANGE_TICKS_TO_DEGREES;
+
   }
 
   public double getMeasurement() {
@@ -78,7 +89,6 @@ public class TurretSubsystem extends SubsystemBase {
   public double getVelocity() {
 
     double velocity;
-
     velocity = topShootMotor.getSelectedSensorVelocity();
 
     return velocity;
@@ -89,6 +99,6 @@ public class TurretSubsystem extends SubsystemBase {
 
     turretMotor.set(speed);
   
-  }
+  } 
  
-}
+}  

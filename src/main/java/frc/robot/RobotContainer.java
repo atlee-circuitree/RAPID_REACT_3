@@ -199,8 +199,8 @@ public class RobotContainer {
     Trigger DriverLT = new Trigger(isDriverLTPressed);
     Trigger DriverRT = new Trigger(isDriverRTPressed);
     
-    DriverLT.whileActiveContinuous(m_feederCommand(-.5));
-    DriverRT.whileActiveContinuous(m_feederCommand(.5));
+    DriverLT.whileActiveContinuous(m_feederCommand(-.72));
+    DriverRT.whileActiveContinuous(m_feederCommand(.72));
     //DriverA.whileHeld(m_feederCommand(.5));
     //DriverB.whileHeld(m_feederCommand(-.5));
     DriverL.whileHeld(m_hookCommand(-.9));
@@ -259,15 +259,29 @@ public class RobotContainer {
     //DOUBLE DISTANCE THAT THIS SHOULD BE GOING
     ), new Pose2d(-3, 0, Rotation2d.fromDegrees(0)),
     trajectoryConfig); */
+    //3, 3 feet
+    //6, 12 feet
 
     Trajectory trajectory = TrajectoryGenerator.generateTrajectory(
-    new Pose2d(0, 0, new Rotation2d(0)),
+    new Pose2d(0, 0, Rotation2d.fromDegrees(0)),
 
     List.of(
-   
-    new Translation2d(-1, 0)
+   /*
+    new Translation2d(-.5, 0),
+    new Translation2d(-1, 0),
+    new Translation2d(-1.5, 0),
+    new Translation2d(-2, 0),
+    new Translation2d(-2.5, 0),
+    new Translation2d(-3, 0),
+    new Translation2d(-3.5, 0),
+    new Translation2d(-4.5, 0),
+    new Translation2d(-5, 0),
+    new Translation2d(-5.5, 0)
     //DOUBLE DISTANCE THAT THIS SHOULD BE GOING
-    ), new Pose2d(-3, 0, Rotation2d.fromDegrees(0)),
+    //0.45 cF
+    //0.64 cF
+    */
+    ), new Pose2d(-6, 0, Rotation2d.fromDegrees(0)),
     trajectoryConfig); 
 
     PIDController xController = new PIDController(Constants.kPXController, 0, 0);
@@ -293,8 +307,8 @@ public class RobotContainer {
     //SequentialCommandGroup TwoBall = new SequentialCommandGroup(m_kickoutCommand.withTimeout(1), m_runFeederAuto.withTimeout(1),
     //DriveAuto.withTimeout(5), new TurretRotateCommand(m_turretSubsystem, m_limelightSubsystem, m_controller).withTimeout(2), m_shootAutoCommand(7500, 1.5), m_shootAutoCommand(6500, 1.4));
 
-    SequentialCommandGroup TwoBallShootFirst = new SequentialCommandGroup(m_kickoutCommand.withTimeout(1), new TurretRotateCommand(m_turretSubsystem, m_limelightSubsystem, m_controller).withTimeout(2), m_runFeederAuto.withTimeout(1),
-    DriveAuto.withTimeout(2), new TurretRotateCommand(m_turretSubsystem, m_limelightSubsystem, m_controller).withTimeout(2));
+    //SequentialCommandGroup TwoBallShootFirst = new SequentialCommandGroup(m_kickoutCommand.withTimeout(1), new TurretRotateCommand(m_turretSubsystem, m_limelightSubsystem, m_controller).withTimeout(2), m_runFeederAuto.withTimeout(1),
+    //DriveAuto.withTimeout(2), new TurretRotateCommand(m_turretSubsystem, m_limelightSubsystem, m_controller).withTimeout(2));
 
     //SequentialCommandGroup TwoBallShootFirstThreeShoot = new SequentialCommandGroup(m_kickoutCommand.withTimeout(1), new TurretRotateCommand(m_turretSubsystem, m_limelightSubsystem, m_controller).withTimeout(2), m_shootAutoCommand(6400, 9000), m_runFeederAuto.withTimeout(1),
     //DriveAuto.withTimeout(5), new TurretRotateCommand(m_turretSubsystem, m_limelightSubsystem, m_controller).withTimeout(2), m_shootAutoCommand(12000, 8000), m_shootAutoCommand(12000, 8000), m_shootAutoCommand(12000, 8000) );
@@ -313,7 +327,7 @@ public class RobotContainer {
 
     } */
 
-    return TwoBallShootFirst;
+    return DriveAuto;
 
   }
 
