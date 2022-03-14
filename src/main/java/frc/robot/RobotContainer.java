@@ -137,7 +137,7 @@ public class RobotContainer {
     //auto.setDefaultOption("TwoBall", 1);
     //auto.addOption("None", 0);
     //auto.addOption("Four Ball", 2.0);
-    SmartDashboard.putData("Choose your Auto", auto);
+    //SmartDashboard.putData("Choose your Auto", auto);
     double smartVelocity = SmartDashboard.getNumber("Turret Velocity", 0);
     SmartDashboard.putNumber("Turret Velocity", smartVelocity);
     double smartBottomMotorMod = SmartDashboard.getNumber("Turret Bottom Mod", 1);
@@ -281,7 +281,7 @@ public class RobotContainer {
     //0.45 cF
     //0.64 cF
     */
-    ), new Pose2d(-6, 0, Rotation2d.fromDegrees(0)),
+    ), new Pose2d(-3, 0, Rotation2d.fromDegrees(0)),
     trajectoryConfig); 
 
     PIDController xController = new PIDController(Constants.kPXController, 0, 0);

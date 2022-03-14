@@ -183,7 +183,7 @@ public class LimeLightSubsystem extends SubsystemBase {
     limelightDashboard = limelightDashboard + "Limelight Vertical/" + dbl_ty + ";";
     limelightDashboard = limelightDashboard + "Theoretical Distance To Target/" + getDistanceToTarget() + ";";
     SmartDashboard.putNumber("Limelight Distance", getDistanceToTarget());
-    
+     
   }
 
 

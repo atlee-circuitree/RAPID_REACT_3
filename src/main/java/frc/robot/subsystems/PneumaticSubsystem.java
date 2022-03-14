@@ -7,6 +7,7 @@ package frc.robot.subsystems;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
+import edu.wpi.first.wpilibj.Compressor;
 import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj.PneumaticsModuleType;
 import edu.wpi.first.wpilibj.DoubleSolenoid.Value;
@@ -20,6 +21,7 @@ public class PneumaticSubsystem extends SubsystemBase {
   DoubleSolenoid shooterPiston;
   DoubleSolenoid kickoutPiston;
   CANSparkMax hookMotor;
+  Compressor compress = new Compressor(PneumaticsModuleType.REVPH);
   
   public PneumaticSubsystem() {
 
@@ -34,6 +36,7 @@ public class PneumaticSubsystem extends SubsystemBase {
   @Override
   public void periodic() {
     // This method will be called once per scheduler run
+    compress.enableAnalog(0, 120);
   }
 
   public void runHookMotor(double speed) {

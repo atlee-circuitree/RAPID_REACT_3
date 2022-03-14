@@ -34,7 +34,7 @@ public class DrivetrainSubsystem extends SubsystemBase {
    */
   
   //Reduced to 6 by Panten for slower testing speeds 
-   public static final double MAX_VOLTAGE = 8.0;
+   public static final double MAX_VOLTAGE = 12.0;
   // FIXME Measure the drivetrain's maximum velocity or calculate the theoretical.
   //  The formula for calculating the theoretical maximum velocity is:
   //   <Motor free speed RPM> / 60 * <Drive reduction> * <Wheel diameter meters> * pi

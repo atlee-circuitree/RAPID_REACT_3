@@ -39,13 +39,13 @@ public class TurretRotateCommand extends CommandBase {
   public void execute() {
 
     //Check Red/Blue and Green/Blue SparkMax led code
-    if(xbox.getLeftBumper() == false){
+    if(xbox.getRightBumper() == false){
       turret.turnTurret(xbox.getLeftX() / 4);
     }
-    else if(limelight.HorizontalOffset() > .2){
+    else if(limelight.HorizontalOffset() > .2 && limelight.HasValidTarget() == true){
       turret.turnTurret(limelight.HorizontalOffset() / 60);
     }
-    else if(limelight.HorizontalOffset() < -.2){
+    else if(limelight.HorizontalOffset() < -.2 && limelight.HasValidTarget() == true){
       turret.turnTurret(limelight.HorizontalOffset() / 60);
     }
     else{
