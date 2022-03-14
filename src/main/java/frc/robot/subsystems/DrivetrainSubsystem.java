@@ -76,7 +76,7 @@ public class DrivetrainSubsystem extends SubsystemBase {
 
   private ChassisSpeeds m_chassisSpeeds = new ChassisSpeeds(0.0, 0.0, 0.0);
 
-  SwerveDriveOdometry odometry = new SwerveDriveOdometry(Constants.SWERVE_KINEMATICS, m_navx.getRotation2d());
+  private final SwerveDriveOdometry odometry = new SwerveDriveOdometry(Constants.SWERVE_KINEMATICS, new Rotation2d(0));
 
   public DrivetrainSubsystem() {
     ShuffleboardTab tab = Shuffleboard.getTab("Drivetrain");
@@ -184,6 +184,11 @@ public class DrivetrainSubsystem extends SubsystemBase {
     m_chassisSpeeds = chassisSpeeds;
   }
 
+  public Rotation2d getRotation2d() {
+
+        return Rotation2d.fromDegrees(getHeading());
+
+  }
   
   //Auto commands
 
@@ -192,7 +197,7 @@ public class DrivetrainSubsystem extends SubsystemBase {
   }
       
   public void resetOdometry(Pose2d pose) {
-    odometry.resetPosition(pose, m_navx.getRotation2d());
+    odometry.resetPosition(pose, getRotation2d());
   }
 
   public double getHeading() {
@@ -223,7 +228,7 @@ public class DrivetrainSubsystem extends SubsystemBase {
     //System.out.println(m_navx.getFusedHeading());
     //System.out.println(m_navx.getYaw());
 
-    odometry.update(m_navx.getRotation2d(), states[0], states[1], states[2], states[3]);
+    odometry.update(getRotation2d(), states[0], states[1], states[2], states[3]);
 
     SmartDashboard.putNumber("Robot Heading", getHeading());
     SmartDashboard.putString("Robot Location", getPose().getTranslation().toString());

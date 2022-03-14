@@ -21,6 +21,7 @@ import org.ejml.dense.block.MatrixOps_DDRB;
 
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.controller.ProfiledPIDController;
+import edu.wpi.first.math.filter.SlewRateLimiter;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
@@ -90,8 +91,8 @@ public class RobotContainer {
   private final RunFeederAuto m_runFeederAuto = new RunFeederAuto(.5, m_feederSubsystem, m_pneumaticSubsystem);
 
   public Command m_shootCommand(double velocity, double bottomFactor) {
-    //Command m_shootCommand = new ShooterWithLimelight(SmartDashboard.getNumber("Turret Velocity", 0), SmartDashboard.getNumber("Turret Bottom Mod", 0),  m_turretSubsystem, m_pneumaticSubsystem, m_limelightSubsystem, m_feederSubsystem);
-    Command m_shootCommand = new ShooterWithLimelight(velocity, bottomFactor, m_turretSubsystem, m_pneumaticSubsystem, m_limelightSubsystem, m_feederSubsystem);
+    Command m_shootCommand = new ShooterWithLimelight(SmartDashboard.getNumber("Turret Velocity", 0), SmartDashboard.getNumber("Turret Velocity Bottom", 0),  m_turretSubsystem, m_pneumaticSubsystem, m_limelightSubsystem, m_feederSubsystem);
+    //Command m_shootCommand = new ShooterWithLimelight(velocity, bottomFactor, m_turretSubsystem, m_pneumaticSubsystem, m_limelightSubsystem, m_feederSubsystem);
     return m_shootCommand;
   }
 
@@ -138,10 +139,11 @@ public class RobotContainer {
     //auto.addOption("None", 0);
     //auto.addOption("Four Ball", 2.0);
     //SmartDashboard.putData("Choose your Auto", auto);
+
     double smartVelocity = SmartDashboard.getNumber("Turret Velocity", 0);
     SmartDashboard.putNumber("Turret Velocity", smartVelocity);
-    double smartBottomMotorMod = SmartDashboard.getNumber("Turret Bottom Mod", 1);
-    SmartDashboard.putNumber("Turret Bottom Mod", smartBottomMotorMod);
+    double smartBottomMotorMod = SmartDashboard.getNumber("Turret Velocity Bottom", 1);
+    SmartDashboard.putNumber("Turret Velocity Bottom", smartBottomMotorMod);
 
     m_drivetrainSubsystem.zeroGyroscope();
     
@@ -214,13 +216,15 @@ public class RobotContainer {
     
     //Velocity: 6400 Bottom: 1.4 Limelight: 101.3
     //Veocity: 7500 Bottom: 1.4 Limelight: 124.4
-    OperatorA.whenPressed(m_shootCommand(6400, 8960), false);
+
+    //Previous values: top: 6400  bottom: 8960
+    OperatorA.whenPressed(m_shootCommand(m_turretSubsystem.metersPerSecondConversion(0), m_turretSubsystem.metersPerSecondConversion(0)), false);
     
-    OperatorB.whenPressed(m_shootCommand(7500, 10000), false);
+    //OperatorB.whenPressed(m_shootCommand(7500, 10000), false);
 
-    OperatorY.whenPressed(m_shootCommand(12000, 8000), false);
+    //OperatorY.whenPressed(m_shootCommand(12000, 8000), false);
 
-    OperatorX.whenPressed(m_shootCommand(4000, 6000), false);
+    //OperatorX.whenPressed(m_shootCommand(4000, 6000), false);
     //6400 12ft position
 
     //Fightstick Buttons
@@ -274,6 +278,7 @@ public class RobotContainer {
     new Translation2d(-2.5, 0),
     new Translation2d(-3, 0),
     new Translation2d(-3.5, 0),
+    new Translation2d(-4, 0),
     new Translation2d(-4.5, 0),
     new Translation2d(-5, 0),
     new Translation2d(-5.5, 0)
