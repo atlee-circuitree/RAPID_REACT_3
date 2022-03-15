@@ -40,10 +40,10 @@ public class TurretSubsystem extends SubsystemBase {
        
     
     
-    //double smartVelocity = SmartDashboard.getNumber("Turret Velocity", 0);
-    //SmartDashboard.putNumber("Turret Velocity", smartVelocity);
-    //double smartBottomMotorMod = SmartDashboard.getNumber("Turret Bottom Mod", 1);
-    //SmartDashboard.putNumber("Turret Bottom Mod", smartBottomMotorMod);
+    double smartVelocity = SmartDashboard.getNumber("Turret Velocity", 0);
+    SmartDashboard.putNumber("Turret Velocity", smartVelocity);
+    double smartBottomMotorMod = SmartDashboard.getNumber("Turret Bottom Mod", 1);
+    SmartDashboard.putNumber("Turret Bottom Mod", smartBottomMotorMod);
 
     turretEncoder = turretMotor.getEncoder(Type.kHallSensor, 42);
   
@@ -74,17 +74,9 @@ public class TurretSubsystem extends SubsystemBase {
 
   public void runTurretWithVelocity(double topVelocity, double bottomVelocity) {
     //Close SZ shoot = Bottom * 1.3
+    topShootMotor.set(ControlMode.Velocity, -topVelocity);
+    bottomShootMotor.set(ControlMode.Velocity, bottomVelocity);
 
-      topShootMotor.set(ControlMode.Velocity, -topVelocity);
-      bottomShootMotor.set(ControlMode.Velocity, bottomVelocity);
-  }
-
-  public double metersPerSecondConversion(double metersPerSecond){
-    
-    double degreesPerSecond = (metersPerSecond/0.1016)*(180/Math.PI);
-    double positionChangePer100ms = (degreesPerSecond * 44.9)/10;
-
-    return positionChangePer100ms;
   }
 
   public double checkTurretWithVelocity(double velocity) {
