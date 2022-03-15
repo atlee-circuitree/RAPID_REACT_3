@@ -55,14 +55,14 @@ public class ShooterWithShuffle extends CommandBase {
   @Override
   public void execute() {
 
-    if (Math.abs(turret.checkTurretWithVelocity(velocity) - velocity) >= 100 && shooterTime.get() < .5) {
+    if (turret.metersPerSecondConversion(turret.checkTurretWithVelocity()) > SmartDashboard.getNumber("Turret Velocity", 4) - .2 || shooterTime.get() < .5) {
  
       turret.runTurretWithMPHandSmart();
       
     } else if (shooterTime.get() < 1.2) {
 
       pneumatic.shooterUp();
-
+     
     } else {
 
       pneumatic.shooterDown();
@@ -70,6 +70,13 @@ public class ShooterWithShuffle extends CommandBase {
     }
 
     SmartDashboard.putNumber("Timer Time", shooterTime.get());
+
+    //2.9, 1.7 Low Goal 65-110 inches away and 2in from center
+    //2.9, 4.0 High Goal 126 inches away
+    //2.9, 4.0 High Goal 165 inches away
+    //
+    //
+    //
 
   }
 

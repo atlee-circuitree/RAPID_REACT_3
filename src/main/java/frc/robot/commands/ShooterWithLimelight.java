@@ -57,7 +57,7 @@ public class ShooterWithLimelight extends CommandBase {
   @Override
   public void execute() {
 
-    if (Math.abs(turret.checkTurretWithVelocity(velocity) - velocity) >= 100 && shooterTime.get() < .5) {
+    if (Math.abs(turret.checkTurretWithVelocity() - velocity) >= 100 && shooterTime.get() < .5) {
  
       turret.runTurretWithVelocity(velocity, bottomVelocity);
       

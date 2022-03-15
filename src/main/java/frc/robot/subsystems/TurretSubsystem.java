@@ -52,7 +52,9 @@ public class TurretSubsystem extends SubsystemBase {
     SmartDashboard.putNumber("Turret Velocity", smartVelocity);
     double smartBottomMotorMod = SmartDashboard.getNumber("Turret Bottom Velocity", 1);
     SmartDashboard.putNumber("Turret Bottom Velocity", smartBottomMotorMod);
-
+    SmartDashboard.putNumber("Shot Top Velocity", metersPerSecondConversion(checkTurretWithVelocity()));
+    SmartDashboard.putNumber("Shot Bottom Velocity", metersPerSecondConversion(checkBottomTurretWithVelocity()));
+ 
   }
 
   protected void useOutput(double output, double setpoint) {
@@ -79,14 +81,20 @@ public class TurretSubsystem extends SubsystemBase {
 
   public void runTurretWithMPHandSmart() {
 
-    //topShootMotor.set(ControlMode.Velocity, -metersPerSecondConversion(SmartDashboard.getNumber("Turret Velocity", 0)));
-    //bottomShootMotor.set(ControlMode.Velocity, metersPerSecondConversion(SmartDashboard.getNumber("Bottom Velocity", 0)));
+    topShootMotor.set(ControlMode.Velocity, -metersPerSecondConversion(SmartDashboard.getNumber("Turret Velocity", 0)));
+    bottomShootMotor.set(ControlMode.Velocity, metersPerSecondConversion(SmartDashboard.getNumber("Turret Bottom Velocity", 0)));
 
   }
 
-  public double checkTurretWithVelocity(double velocity) {
+  public double checkTurretWithVelocity() {
     //Close SZ shoot = Bottom * 1.3
     return topShootMotor.getSelectedSensorVelocity();
+    
+  }
+
+  public double checkBottomTurretWithVelocity() {
+    //Close SZ shoot = Bottom * 1.3
+    return bottomShootMotor.getSelectedSensorVelocity();
     
   }
 
