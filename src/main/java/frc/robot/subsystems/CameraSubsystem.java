@@ -19,6 +19,10 @@ public class CameraSubsystem extends SubsystemBase {
     CameraServer.startAutomaticCapture("Rear Camera", 0);
   }
 
+  public void initRearCamera(){
+    CameraServer.startAutomaticCapture("Rear Camera", 0);
+  }
+
   @Override
   public void periodic() {
     // This method will be called once per scheduler run

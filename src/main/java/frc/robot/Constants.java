@@ -30,7 +30,7 @@ public final class Constants {
      * Should be measured from center to center.
      */
 
-    public static final double LIMELIGHT_TX_OFFSET = 3.18;
+    public static final double LIMELIGHT_TX_OFFSET = -5.18;
 
     public static final double AUTO_MAX_ACCLERATION_METERS_PER_SECOND_SQUARED = 2;
     //public static final double AUTO_MAX_ACCLERATION_METERS_PER_SECOND_SQUARED = 1;

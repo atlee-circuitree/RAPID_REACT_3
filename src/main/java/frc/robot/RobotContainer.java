@@ -47,6 +47,7 @@ import frc.robot.commands.RunFeederAuto;
 import frc.robot.commands.RunHookCommand;
 import frc.robot.commands.ShooterInAuto;
 import frc.robot.commands.ShooterWithLimelight;
+import frc.robot.commands.ShooterWithShuffle;
 import frc.robot.commands.TurretAuto;
 import frc.robot.commands.TurretRotateCommand;
 import frc.robot.subsystems.CameraSubsystem;
@@ -90,8 +91,18 @@ public class RobotContainer {
   private final RunFeederAuto m_runFeederAuto = new RunFeederAuto(.5, m_feederSubsystem, m_pneumaticSubsystem);
 
   public Command m_shootCommand(double velocity, double bottomFactor) {
-    //Command m_shootCommand = new ShooterWithLimelight(SmartDashboard.getNumber("Turret Velocity", 0), SmartDashboard.getNumber("Turret Bottom Mod", 0),  m_turretSubsystem, m_pneumaticSubsystem, m_limelightSubsystem, m_feederSubsystem);
-    Command m_shootCommand = new ShooterWithLimelight(velocity, bottomFactor, m_turretSubsystem, m_pneumaticSubsystem, m_limelightSubsystem, m_feederSubsystem);
+    double topVelocity = m_turretSubsystem.metersPerSecondConversion(velocity);
+    double bottomVelocity = m_turretSubsystem.metersPerSecondConversion(bottomFactor);
+    
+    Command m_shootCommand = new ShooterWithLimelight(topVelocity, bottomVelocity, m_turretSubsystem, m_pneumaticSubsystem, m_limelightSubsystem, m_feederSubsystem);
+    //Command m_shootCommand = new ShooterWithLimelight(velocity, bottomFactor, m_turretSubsystem, m_pneumaticSubsystem, m_limelightSubsystem, m_feederSubsystem);
+    return m_shootCommand;
+  }
+
+  public Command m_shootWithShuffleCommand() {
+    
+    Command m_shootCommand = new ShooterWithShuffle(m_turretSubsystem, m_pneumaticSubsystem, m_limelightSubsystem, m_feederSubsystem);
+    //Command m_shootCommand = new ShooterWithLimelight(velocity, bottomFactor, m_turretSubsystem, m_pneumaticSubsystem, m_limelightSubsystem, m_feederSubsystem);
     return m_shootCommand;
   }
 
@@ -138,14 +149,13 @@ public class RobotContainer {
     //auto.addOption("None", 0);
     //auto.addOption("Four Ball", 2.0);
     //SmartDashboard.putData("Choose your Auto", auto);
-    double smartVelocity = SmartDashboard.getNumber("Turret Velocity", 0);
-    SmartDashboard.putNumber("Turret Velocity", smartVelocity);
-    double smartBottomMotorMod = SmartDashboard.getNumber("Turret Bottom Mod", 1);
-    SmartDashboard.putNumber("Turret Bottom Mod", smartBottomMotorMod);
+    
 
     m_drivetrainSubsystem.zeroGyroscope();
     
     m_drivetrainSubsystem.setDefaultCommand(DriveWithTurret);
+
+    cameraSubsystem.initRearCamera();
     
     // Configure the button bindings
     configureButtonBindings();
@@ -214,7 +224,7 @@ public class RobotContainer {
     
     //Velocity: 6400 Bottom: 1.4 Limelight: 101.3
     //Veocity: 7500 Bottom: 1.4 Limelight: 124.4
-    OperatorA.whenPressed(m_shootCommand(6400, 8960), false);
+    OperatorA.whenPressed(m_shootWithShuffleCommand(), false);
     
     OperatorB.whenPressed(m_shootCommand(7500, 10000), false);
 
@@ -281,7 +291,7 @@ public class RobotContainer {
     //0.45 cF
     //0.64 cF
     */
-    ), new Pose2d(-3, 0, Rotation2d.fromDegrees(0)),
+    ), new Pose2d(-2, 0, Rotation2d.fromDegrees(0)),
     trajectoryConfig); 
 
     PIDController xController = new PIDController(Constants.kPXController, 0, 0);

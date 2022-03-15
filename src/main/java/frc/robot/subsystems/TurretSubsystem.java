@@ -37,13 +37,6 @@ public class TurretSubsystem extends SubsystemBase {
     bottomShootMotor = new TalonSRX(Constants.bottomShooterMotorPort);
     
     turretMotor = new CANSparkMax(Constants.turretMotorPort, MotorType.kBrushless);
-       
-    
-    
-    double smartVelocity = SmartDashboard.getNumber("Turret Velocity", 0);
-    SmartDashboard.putNumber("Turret Velocity", smartVelocity);
-    double smartBottomMotorMod = SmartDashboard.getNumber("Turret Bottom Mod", 1);
-    SmartDashboard.putNumber("Turret Bottom Mod", smartBottomMotorMod);
 
     turretEncoder = turretMotor.getEncoder(Type.kHallSensor, 42);
   
@@ -54,6 +47,11 @@ public class TurretSubsystem extends SubsystemBase {
 
     
     SmartDashboard.putNumber("Turret Angle", getTurretEncoder());
+    
+    double smartVelocity = SmartDashboard.getNumber("Turret Velocity", 0);
+    SmartDashboard.putNumber("Turret Velocity", smartVelocity);
+    double smartBottomMotorMod = SmartDashboard.getNumber("Turret Bottom Velocity", 1);
+    SmartDashboard.putNumber("Turret Bottom Velocity", smartBottomMotorMod);
 
   }
 
@@ -79,6 +77,13 @@ public class TurretSubsystem extends SubsystemBase {
 
   }
 
+  public void runTurretWithMPHandSmart() {
+
+    //topShootMotor.set(ControlMode.Velocity, -metersPerSecondConversion(SmartDashboard.getNumber("Turret Velocity", 0)));
+    //bottomShootMotor.set(ControlMode.Velocity, metersPerSecondConversion(SmartDashboard.getNumber("Bottom Velocity", 0)));
+
+  }
+
   public double checkTurretWithVelocity(double velocity) {
     //Close SZ shoot = Bottom * 1.3
     return topShootMotor.getSelectedSensorVelocity();
@@ -99,6 +104,14 @@ public class TurretSubsystem extends SubsystemBase {
 
     turretMotor.set(speed);
   
-  } 
+  }
+  
+  public double metersPerSecondConversion(double metersPerSecond){
+    
+    double degreesPerSecond = (metersPerSecond/0.1016)*(180/Math.PI);
+    double positionChangePer100ms = (degreesPerSecond * 44.9)/10;
+
+    return positionChangePer100ms;
+  }
  
 }  
