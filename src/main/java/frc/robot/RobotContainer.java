@@ -91,8 +91,8 @@ public class RobotContainer {
   private final RunFeederAuto m_runFeederAuto = new RunFeederAuto(.5, m_feederSubsystem, m_pneumaticSubsystem);
 
   public Command m_shootCommand(double velocity, double bottomFactor) {
-    double topVelocity = m_turretSubsystem.metersPerSecondConversion(velocity);
-    double bottomVelocity = m_turretSubsystem.metersPerSecondConversion(bottomFactor);
+    double topVelocity = m_turretSubsystem.metersPerSecondtoVelocity(velocity);
+    double bottomVelocity = m_turretSubsystem.metersPerSecondtoVelocity(bottomFactor);
     
     Command m_shootCommand = new ShooterWithLimelight(topVelocity, bottomVelocity, m_turretSubsystem, m_pneumaticSubsystem, m_limelightSubsystem, m_feederSubsystem);
     //Command m_shootCommand = new ShooterWithLimelight(velocity, bottomFactor, m_turretSubsystem, m_pneumaticSubsystem, m_limelightSubsystem, m_feederSubsystem);
@@ -226,11 +226,11 @@ public class RobotContainer {
     //Veocity: 7500 Bottom: 1.4 Limelight: 124.4
     OperatorA.whenPressed(m_shootWithShuffleCommand(), false);
     
-    OperatorB.whenPressed(m_shootCommand(7500, 10000), false);
+    //OperatorB.whenPressed(m_shootCommand(7500, 10000), false);
 
-    OperatorY.whenPressed(m_shootCommand(12000, 8000), false);
+    //OperatorY.whenPressed(m_shootCommand(12000, 8000), false);
 
-    OperatorX.whenPressed(m_shootCommand(4000, 6000), false);
+    OperatorX.whenPressed(m_shootCommand(400, 600), false);
     //6400 12ft position
 
     //Fightstick Buttons

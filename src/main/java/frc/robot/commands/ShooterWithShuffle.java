@@ -27,8 +27,7 @@ public class ShooterWithShuffle extends CommandBase {
   private double distance;
   private long timeout = 1000;
   Timer shooterTime = new Timer();
-
-  double startingTime = shooterTime.get();   
+   
 
   public ShooterWithShuffle(TurretSubsystem ts, PneumaticSubsystem ps, LimeLightSubsystem ls, FeederSubsystem fs) {
  
@@ -48,24 +47,27 @@ public class ShooterWithShuffle extends CommandBase {
     //PUT ALGORITHIM HERE
     shooterTime.start();
     shooterTime.reset();
- 
+
   }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-
-    if (turret.metersPerSecondConversion(turret.checkTurretWithVelocity()) > SmartDashboard.getNumber("Turret Velocity", 4) - .2 || shooterTime.get() < .5) {
+    //Original time values: 0.5 and 1.2
+    if (Math.abs(turret.checkTopMotorWithVelocity() - SmartDashboard.getNumber("Turret Velocity", 9000)) >= 50 && Math.abs(turret.checkBottomMotorWithVelocity() - SmartDashboard.getNumber("Turret Bottom Velocity", 9000)) >= 50) {
  
-      turret.runTurretWithMPHandSmart();
+      turret.runTurretFromSystem(turret.shuffleShooterTop, turret.shuffleShooterBottom);
+      System.out.println("Stage 1, not at velocity");
       
-    } else if (shooterTime.get() < 1.2) {
+    } else if (shooterTime.get() < 1.5) {
 
       pneumatic.shooterUp();
+      System.out.println("Stage 2");
      
     } else {
 
       pneumatic.shooterDown();
+      System.out.println("Stage 3");
 
     }
 
@@ -82,7 +84,9 @@ public class ShooterWithShuffle extends CommandBase {
 
   @Override
   public void end(boolean interrupted) {
-
+    
+    turret.killTurretMotors();
+    pneumatic.shooterDown();
      
   }
 
@@ -91,7 +95,7 @@ public class ShooterWithShuffle extends CommandBase {
   public boolean isFinished() {
     if  (shooterTime.get() > 1.25) {
 
-      turret.runTurretWithVelocity(0, 1.4);
+      turret.killTurretMotors();
       return true;
 
     } else {

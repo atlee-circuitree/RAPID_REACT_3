@@ -43,10 +43,10 @@ public class TurretRotateCommand extends CommandBase {
       turret.turnTurret(xbox.getLeftX() / 4);
     }
     else if(limelight.HorizontalOffset() > .2 && limelight.HasValidTarget() == true){
-      turret.turnTurret(limelight.HorizontalOffset() / 60);
+      turret.turnTurret(limelight.HorizontalOffset() / 30);
     }
     else if(limelight.HorizontalOffset() < -.2 && limelight.HasValidTarget() == true){
-      turret.turnTurret(limelight.HorizontalOffset() / 60);
+      turret.turnTurret(limelight.HorizontalOffset() / 30);
     }
     else{
       turret.turnTurret(0);
