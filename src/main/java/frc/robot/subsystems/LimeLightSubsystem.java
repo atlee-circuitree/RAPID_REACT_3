@@ -183,6 +183,7 @@ public class LimeLightSubsystem extends SubsystemBase {
     limelightDashboard = limelightDashboard + "Limelight Vertical/" + dbl_ty + ";";
     limelightDashboard = limelightDashboard + "Theoretical Distance To Target/" + getDistanceToTarget() + ";";
     SmartDashboard.putNumber("Limelight Distance", getDistanceToTarget());
+    SmartDashboard.putNumber("Distance Rounded", distanceRounded(getDistanceToTarget()));
      
   }
 
@@ -207,11 +208,26 @@ public class LimeLightSubsystem extends SubsystemBase {
 
     //calculate distance
     double distanceFromLimelightToGoalInches = (goalHeightInches - limelightHeightInches)/Math.tan(angleToGoalRadians);
-
+    double distanceFromLimelighttoGoalMeters = distanceFromLimelightToGoalInches / 39.37;
     //return in meters
-    return distanceFromLimelightToGoalInches / 39.37;
+    if (HasValidTarget() == false) {
+
+      return 0;
+
+    } else {
+
+      return distanceFromLimelighttoGoalMeters;
+
+    }
+    
 
   }
+
+  public double distanceRounded(double distance) {
+
+    return (int) Math.round(distance * 10);
+    
+  } 
  
 }
 

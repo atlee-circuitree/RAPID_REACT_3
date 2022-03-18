@@ -24,6 +24,7 @@ import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj.PWM;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.Constants;
+import frc.robot.LaunchVelocity;
 import frc.robot.dependents.AbsoluteEncoder;
 
 public class TurretSubsystem extends SubsystemBase {
@@ -62,10 +63,81 @@ public class TurretSubsystem extends SubsystemBase {
     SmartDashboard.putNumber("Turret Velocity", smartVelocity);
     double smartBottomMotorMod = SmartDashboard.getNumber("Turret Bottom Velocity", 1);
     SmartDashboard.putNumber("Turret Bottom Velocity", smartBottomMotorMod);
- 
     SmartDashboard.putNumber("Shot Top Velocity Pos/100ms", checkTopMotorWithVelocity());
     SmartDashboard.putNumber("Shot Bottom Velocity Pos/100ms", checkBottomTurretWithVelocity());
  
+  }
+
+  public LaunchVelocity[] getDistanceToVelocityArray(){
+    // 10 = 1.0 Meter
+    // First launch velocity value is the top motor
+    // robotDistance[meters in tenths] = new LaunchVelocity(top motor velocity, bottom motor velocity);
+
+    LaunchVelocity robotDistance[];
+    robotDistance = new LaunchVelocity[61]; 
+    robotDistance[0] = new LaunchVelocity(2400, 6000);
+robotDistance[1] = new LaunchVelocity(2500, 6000);
+robotDistance[2] = new LaunchVelocity(2500, 6000);
+robotDistance[3] = new LaunchVelocity(2500, 6000);
+robotDistance[4] = new LaunchVelocity(2500, 6000);
+robotDistance[5] = new LaunchVelocity(2500, 6000);
+robotDistance[6] = new LaunchVelocity(2500, 6000);
+robotDistance[7] = new LaunchVelocity(2500, 6000);
+robotDistance[8] = new LaunchVelocity(2500, 6000);
+robotDistance[9] = new LaunchVelocity(2500, 6000);
+robotDistance[10] = new LaunchVelocity(2500, 6000);
+robotDistance[11] = new LaunchVelocity(2500, 6000);
+robotDistance[12] = new LaunchVelocity(2500, 6000);
+robotDistance[13] = new LaunchVelocity(2500, 6000);
+robotDistance[14] = new LaunchVelocity(3000, 12000);
+robotDistance[15] = new LaunchVelocity(3000, 12000);
+robotDistance[16] = new LaunchVelocity(4200, 10000);
+robotDistance[17] = new LaunchVelocity(4200, 10000);
+robotDistance[18] = new LaunchVelocity(4700, 10000);
+robotDistance[19] = new LaunchVelocity(4700, 10000);
+robotDistance[20] = new LaunchVelocity(5200, 10000);
+robotDistance[21] = new LaunchVelocity(5200, 10000);
+robotDistance[22] = new LaunchVelocity(5300, 10000);
+robotDistance[23] = new LaunchVelocity(5300, 10000);
+robotDistance[24] = new LaunchVelocity(5300, 10000);
+robotDistance[25] = new LaunchVelocity(5500, 10000);
+robotDistance[26] = new LaunchVelocity(5800, 10000);
+robotDistance[27] = new LaunchVelocity(5800, 10000);
+robotDistance[28] = new LaunchVelocity(6700, 9300);
+robotDistance[29] = new LaunchVelocity(6700, 9300);
+robotDistance[30] = new LaunchVelocity(7700, 8500);
+robotDistance[31] = new LaunchVelocity(8600, 8000);
+robotDistance[32] = new LaunchVelocity(8800, 8000);
+robotDistance[33] = new LaunchVelocity(8800, 8000);
+robotDistance[34] = new LaunchVelocity(9000, 8000);
+robotDistance[35] = new LaunchVelocity(9000, 8000);
+robotDistance[36] = new LaunchVelocity(9400, 8000);
+robotDistance[37] = new LaunchVelocity(9400, 8000);
+robotDistance[38] = new LaunchVelocity(9800, 8000);
+robotDistance[39] = new LaunchVelocity(9800, 8000);
+robotDistance[40] = new LaunchVelocity(11200, 7800);
+robotDistance[41] = new LaunchVelocity(11200, 7800);
+robotDistance[42] = new LaunchVelocity(11600, 7600);
+robotDistance[43] = new LaunchVelocity(11600, 7600);
+robotDistance[44] = new LaunchVelocity(13200, 6700);
+robotDistance[45] = new LaunchVelocity(13200, 6700);
+robotDistance[46] = new LaunchVelocity(2400, 6000);
+robotDistance[47] = new LaunchVelocity(2400, 6000);
+robotDistance[48] = new LaunchVelocity(2400, 6000);
+robotDistance[49] = new LaunchVelocity(2400, 6000);
+robotDistance[50] = new LaunchVelocity(2400, 6000);
+robotDistance[51] = new LaunchVelocity(0, 0);
+robotDistance[52] = new LaunchVelocity(0, 0);
+robotDistance[53] = new LaunchVelocity(0, 0);
+robotDistance[54] = new LaunchVelocity(0, 0);
+robotDistance[55] = new LaunchVelocity(0, 0);
+robotDistance[56] = new LaunchVelocity(0, 0);
+robotDistance[57] = new LaunchVelocity(0, 0);
+robotDistance[58] = new LaunchVelocity(0, 0);
+robotDistance[59] = new LaunchVelocity(0, 0);
+robotDistance[60] = new LaunchVelocity(0, 0);
+
+        return robotDistance;
   }
 
   protected void useOutput(double output, double setpoint) {
@@ -84,8 +156,8 @@ public class TurretSubsystem extends SubsystemBase {
   }
 
   public void runTurretWithVelocity(double topVelocity, double bottomVelocity) {
-    topShootMotor.set(ControlMode.Velocity, topVelocity);
-    bottomShootMotor.set(ControlMode.Velocity, -bottomVelocity);
+    topShootMotor.set(ControlMode.Velocity, -topVelocity);
+    bottomShootMotor.set(ControlMode.Velocity, bottomVelocity);
 
   }
 

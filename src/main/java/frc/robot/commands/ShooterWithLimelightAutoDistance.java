@@ -11,33 +11,32 @@ import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
+import frc.robot.LaunchVelocity;
 import frc.robot.subsystems.FeederSubsystem;
 import frc.robot.subsystems.LimeLightSubsystem;
 import frc.robot.subsystems.PneumaticSubsystem;
 import frc.robot.subsystems.TurretSubsystem;
 
-public class ShooterWithLimelight extends CommandBase {
+public class ShooterWithLimelightAutoDistance extends CommandBase {
    
   private final TurretSubsystem turret;
   private final PneumaticSubsystem pneumatic;
   private final LimeLightSubsystem limelight;
   private final FeederSubsystem feeder;
-  private double velocity;
-  private double bottomVelocity;
+  public double velocity;
+  public double bottomVelocity;
   private double distance;
   private long timeout = 1000;
   Timer shooterTime = new Timer();
 
   double startingTime = shooterTime.get();   
 
-  public ShooterWithLimelight(double targetVelocity, double targetBottom, TurretSubsystem ts, PneumaticSubsystem ps, LimeLightSubsystem ls, FeederSubsystem fs) {
+  public ShooterWithLimelightAutoDistance(TurretSubsystem ts, PneumaticSubsystem ps, LimeLightSubsystem ls, FeederSubsystem fs) {
  
     turret = ts;
     pneumatic = ps;
     limelight = ls;
     feeder = fs;
-    bottomVelocity = targetBottom;
-    velocity = targetVelocity;
     addRequirements(turret);
     
   }
@@ -47,6 +46,17 @@ public class ShooterWithLimelight extends CommandBase {
     
     //Limelight stuff
     distance = limelight.getDistanceToTarget();
+ 
+    int roundedDistance = (int) Math.round(distance * 10);
+    
+    LaunchVelocity[] launchVelocityArray = turret.getDistanceToVelocityArray();
+
+    velocity = launchVelocityArray[roundedDistance].topMotorVelocity;
+
+    bottomVelocity = launchVelocityArray[roundedDistance].bottomMotorVelocity;
+
+    SmartDashboard.putNumber("Real rounded distance", roundedDistance);
+
     //PUT ALGORITHIM HERE
     shooterTime.start();
     shooterTime.reset();

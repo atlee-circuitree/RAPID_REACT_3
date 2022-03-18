@@ -35,6 +35,7 @@ public class ShooterWithShuffle extends CommandBase {
     pneumatic = ps;
     limelight = ls;
     feeder = fs;
+    //SmartDashboard.putNumber("Target Distance", printline)
     addRequirements(turret);
     
   }
@@ -54,12 +55,12 @@ public class ShooterWithShuffle extends CommandBase {
   @Override
   public void execute() {
     //Original time values: 0.5 and 1.2
-    if (Math.abs(turret.checkTopMotorWithVelocity() - SmartDashboard.getNumber("Turret Velocity", 9000)) >= 50 && Math.abs(turret.checkBottomMotorWithVelocity() - SmartDashboard.getNumber("Turret Bottom Velocity", 9000)) >= 50) {
+    if (Math.abs(turret.checkTopMotorWithVelocity() - SmartDashboard.getNumber("Turret Velocity", 9000)) >= 100 && Math.abs(turret.checkBottomMotorWithVelocity() - SmartDashboard.getNumber("Turret Bottom Velocity", 9000)) >= 100) {
  
       turret.runTurretFromSystem(turret.shuffleShooterTop, turret.shuffleShooterBottom);
       System.out.println("Stage 1, not at velocity");
       
-    } else if (shooterTime.get() < 1.5) {
+    } else if (shooterTime.get() < 2.5) {
 
       pneumatic.shooterUp();
       System.out.println("Stage 2");
@@ -93,7 +94,7 @@ public class ShooterWithShuffle extends CommandBase {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    if  (shooterTime.get() > 1.25) {
+    if  (shooterTime.get() > 2.5) {
 
       turret.killTurretMotors();
       return true;

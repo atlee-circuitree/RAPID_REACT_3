@@ -47,6 +47,7 @@ import frc.robot.commands.RunFeederAuto;
 import frc.robot.commands.RunHookCommand;
 import frc.robot.commands.ShooterInAuto;
 import frc.robot.commands.ShooterWithLimelight;
+import frc.robot.commands.ShooterWithLimelightAutoDistance;
 import frc.robot.commands.ShooterWithShuffle;
 import frc.robot.commands.TurretAuto;
 import frc.robot.commands.TurretRotateCommand;
@@ -90,15 +91,23 @@ public class RobotContainer {
   private final KickoutPistonCommand m_kickoutCommand = new KickoutPistonCommand(m_pneumaticSubsystem);
   private final RunFeederAuto m_runFeederAuto = new RunFeederAuto(.5, m_feederSubsystem, m_pneumaticSubsystem);
 
-  public Command m_shootCommand(double velocity, double bottomFactor) {
-    double topVelocity = m_turretSubsystem.metersPerSecondtoVelocity(velocity);
-    double bottomVelocity = m_turretSubsystem.metersPerSecondtoVelocity(bottomFactor);
-    
+  public Command m_shootCommand(double topVelocity, double bottomVelocity) {  
     Command m_shootCommand = new ShooterWithLimelight(topVelocity, bottomVelocity, m_turretSubsystem, m_pneumaticSubsystem, m_limelightSubsystem, m_feederSubsystem);
     //Command m_shootCommand = new ShooterWithLimelight(velocity, bottomFactor, m_turretSubsystem, m_pneumaticSubsystem, m_limelightSubsystem, m_feederSubsystem);
     return m_shootCommand;
   }
 
+  public Command m_adaptiveshootCommand() {  
+    
+    Command m_shootCommand = new ShooterWithLimelightAutoDistance(m_turretSubsystem, m_pneumaticSubsystem, m_limelightSubsystem, m_feederSubsystem);
+    //Command m_shootCommand = new ShooterWithLimelight(velocity, bottomFactor, m_turretSubsystem, m_pneumaticSubsystem, m_limelightSubsystem, m_feederSubsystem);
+    //Command m_shootCommand = new ShooterWithLimelight(8500, 8000, m_turretSubsystem, m_pneumaticSubsystem, m_limelightSubsystem, m_feederSubsystem);
+
+    return m_shootCommand;
+  }
+
+
+  
   public Command m_shootWithShuffleCommand() {
     
     Command m_shootCommand = new ShooterWithShuffle(m_turretSubsystem, m_pneumaticSubsystem, m_limelightSubsystem, m_feederSubsystem);
@@ -137,13 +146,20 @@ public class RobotContainer {
    * The container for the robot. Contains subsystems, OI devices, and commands.
    */
   public RobotContainer() {
+                //Shooter
+    /*
+      distance = limelight
+      round(dinsance)
+      robotDistance[distance].topMotorVelocity
+      robotDistance[distance].bottomMotorVelocity
+*/
+
     // Set up the default command for the drivetrain.
     // The controls are for field-oriented driving:
     // Left stick Y axis -> forward and backwards movement
     // Left stick X axis -> left and right movement
     // Right stick X axis -> rotation
     PerpetualCommand DriveWithTurret = new PerpetualCommand(m_driveCommand.alongWith(m_turretRotateCommand)); 
-
     
     //auto.setDefaultOption("TwoBall", 1);
     //auto.addOption("None", 0);
@@ -226,11 +242,11 @@ public class RobotContainer {
     //Veocity: 7500 Bottom: 1.4 Limelight: 124.4
     OperatorA.whenPressed(m_shootWithShuffleCommand(), false);
     
-    //OperatorB.whenPressed(m_shootCommand(7500, 10000), false);
+    OperatorB.whenPressed(m_adaptiveshootCommand(), false);
 
-    //OperatorY.whenPressed(m_shootCommand(12000, 8000), false);
+    OperatorY.whenPressed(m_shootCommand(8800, 8000), false);
 
-    OperatorX.whenPressed(m_shootCommand(400, 600), false);
+    OperatorX.whenPressed(m_shootCommand(4000, 4000), false);
     //6400 12ft position
 
     //Fightstick Buttons

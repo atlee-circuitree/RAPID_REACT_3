@@ -88,8 +88,7 @@ public final class Constants {
           new Translation2d(-DRIVETRAIN_TRACKWIDTH_METERS / 2.0, DRIVETRAIN_WHEELBASE_METERS / 2.0),
           // Back right
           new Translation2d(-DRIVETRAIN_TRACKWIDTH_METERS / 2.0, -DRIVETRAIN_WHEELBASE_METERS / 2.0)
-  );
-    
+    );
 
     // Old Constants
 
@@ -119,4 +118,6 @@ public final class Constants {
 
     public static final TrapezoidProfile.Constraints thetaControllerConstraints =
         new TrapezoidProfile.Constraints(Math.PI, Math.PI);
+
+    
 }
