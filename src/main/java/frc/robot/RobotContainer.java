@@ -240,11 +240,11 @@ public class RobotContainer {
     
     //Velocity: 6400 Bottom: 1.4 Limelight: 101.3
     //Veocity: 7500 Bottom: 1.4 Limelight: 124.4
-    OperatorA.whenPressed(m_shootWithShuffleCommand(), false);
+    OperatorA.whenPressed(m_adaptiveshootCommand(), false);
     
-    OperatorB.whenPressed(m_adaptiveshootCommand(), false);
+    OperatorB.whenPressed(m_shootCommand(7700, 8000), false);
 
-    OperatorY.whenPressed(m_shootCommand(8800, 8000), false);
+    OperatorY.whenPressed(m_shootCommand(11200, 7800), false);
 
     OperatorX.whenPressed(m_shootCommand(4000, 4000), false);
     //6400 12ft position
