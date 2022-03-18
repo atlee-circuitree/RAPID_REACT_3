@@ -280,7 +280,7 @@ public class RobotContainer {
     new Pose2d(0, 0, new Rotation2d(0)),
 
     List.of(
-   
+  
     new Translation2d(-1, 0)
     //DOUBLE DISTANCE THAT THIS SHOULD BE GOING
     ), new Pose2d(-3, 0, Rotation2d.fromDegrees(0)),
@@ -305,8 +305,12 @@ public class RobotContainer {
     new Translation2d(-5.5, 0)
     //DOUBLE DISTANCE THAT THIS SHOULD BE GOING
     //0.45 cF
-    //0.64 cF
+    //0.64 cF    
     */
+
+    //32in 1 units
+    //68in 2 units
+    new Translation2d(-1, 0)
     ), new Pose2d(-2, 0, Rotation2d.fromDegrees(0)),
     trajectoryConfig); 
 
@@ -330,8 +334,10 @@ public class RobotContainer {
       swerveControllerCommand,
       new InstantCommand(() -> m_drivetrainSubsystem.killModules()));
 
-    //SequentialCommandGroup TwoBall = new SequentialCommandGroup(m_kickoutCommand.withTimeout(1), m_runFeederAuto.withTimeout(1),
-    //DriveAuto.withTimeout(5), new TurretRotateCommand(m_turretSubsystem, m_limelightSubsystem, m_controller).withTimeout(2), m_shootAutoCommand(7500, 1.5), m_shootAutoCommand(6500, 1.4));
+    SequentialCommandGroup TwoBall = new SequentialCommandGroup(m_kickoutCommand.withTimeout(1), m_runFeederAuto.withTimeout(1),
+    DriveAuto.withTimeout(5), new TurretRotateCommand(m_turretSubsystem, m_limelightSubsystem, m_controller).withTimeout(2), m_shootAutoCommand(8400, 8000), m_shootAutoCommand(8400, 8000));
+
+    return TwoBall;
 
     //SequentialCommandGroup TwoBallShootFirst = new SequentialCommandGroup(m_kickoutCommand.withTimeout(1), new TurretRotateCommand(m_turretSubsystem, m_limelightSubsystem, m_controller).withTimeout(2), m_runFeederAuto.withTimeout(1),
     //DriveAuto.withTimeout(2), new TurretRotateCommand(m_turretSubsystem, m_limelightSubsystem, m_controller).withTimeout(2));
@@ -345,7 +351,7 @@ public class RobotContainer {
 
     } else if (auto.getSelected() == 1) {
 
-      return TwoBall;
+    return TwoBall;
 
     } else {
 
@@ -353,7 +359,7 @@ public class RobotContainer {
 
     } */
 
-    return DriveAuto;
+    //return DriveAuto;
 
   }
 
