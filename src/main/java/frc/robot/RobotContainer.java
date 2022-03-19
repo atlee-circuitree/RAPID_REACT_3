@@ -36,6 +36,7 @@ import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.PerpetualCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.SwerveControllerCommand;
+import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.button.Button;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
@@ -97,7 +98,7 @@ public class RobotContainer {
     return m_shootCommand;
   }
 
-  public Command m_adaptiveshootCommand() {  
+  public Command m_adaptiveShootCommand() {  
     
     Command m_shootCommand = new ShooterWithLimelightAutoDistance(m_turretSubsystem, m_pneumaticSubsystem, m_limelightSubsystem, m_feederSubsystem);
     //Command m_shootCommand = new ShooterWithLimelight(velocity, bottomFactor, m_turretSubsystem, m_pneumaticSubsystem, m_limelightSubsystem, m_feederSubsystem);
@@ -118,6 +119,21 @@ public class RobotContainer {
   public Command m_shootAutoCommand(double velocity, double bottomFactor) {
     //Command m_shootCommand = new ShooterWithLimelight(SmartDashboard.getNumber("Turret Velocity", 0), SmartDashboard.getNumber("Turret Bottom Mod", 0),  m_turretSubsystem, m_pneumaticSubsystem, m_limelightSubsystem, m_feederSubsystem);
     Command m_shootCommand = new ShooterInAuto(velocity, bottomFactor, m_turretSubsystem, m_pneumaticSubsystem, m_limelightSubsystem, m_feederSubsystem);
+    return m_shootCommand;
+  }
+
+  public Command m_adaptiveAutoShootCommand() {
+    //Limelight stuff
+    double distance = m_limelightSubsystem.getDistanceToTarget();
+ 
+    int roundedDistance = (int) Math.round(distance * 10);
+    
+    LaunchVelocity[] launchVelocityArray = m_turretSubsystem.getDistanceToVelocityArray();
+
+    double velocity = launchVelocityArray[roundedDistance].topMotorVelocity;
+
+    double bottomVelocity = launchVelocityArray[roundedDistance].bottomMotorVelocity;
+    Command m_shootCommand = new ShooterInAuto(velocity, bottomVelocity, m_turretSubsystem, m_pneumaticSubsystem, m_limelightSubsystem, m_feederSubsystem);
     return m_shootCommand;
   }
 
@@ -153,6 +169,7 @@ public class RobotContainer {
       robotDistance[distance].topMotorVelocity
       robotDistance[distance].bottomMotorVelocity
 */
+    m_limelightSubsystem.EnableLED();
 
     // Set up the default command for the drivetrain.
     // The controls are for field-oriented driving:
@@ -240,7 +257,7 @@ public class RobotContainer {
     
     //Velocity: 6400 Bottom: 1.4 Limelight: 101.3
     //Veocity: 7500 Bottom: 1.4 Limelight: 124.4
-    OperatorA.whenPressed(m_adaptiveshootCommand(), false);
+    OperatorA.whenPressed(m_adaptiveShootCommand(), false);
     
     OperatorB.whenPressed(m_shootCommand(7700, 8000), false);
 
@@ -310,8 +327,8 @@ public class RobotContainer {
 
     //32in 1 units
     //68in 2 units
-    new Translation2d(-1, 0)
-    ), new Pose2d(-2, 0, Rotation2d.fromDegrees(0)),
+    //new Translation2d(-0.5, 0)
+    ), new Pose2d(-1, 0, Rotation2d.fromDegrees(-22)),
     trajectoryConfig); 
 
     PIDController xController = new PIDController(Constants.kPXController, 0, 0);
@@ -329,13 +346,28 @@ public class RobotContainer {
     m_drivetrainSubsystem::setSwerveModuleStates, 
     m_drivetrainSubsystem);
 
+    SwerveControllerCommand swerveControllerCommand2 = new SwerveControllerCommand(
+    trajectory,
+    m_drivetrainSubsystem::getPose,
+    Constants.SWERVE_KINEMATICS,
+    xController,
+    yController,
+    thetaController,
+    m_drivetrainSubsystem::setSwerveModuleStates, 
+    m_drivetrainSubsystem);
+
     SequentialCommandGroup DriveAuto = new SequentialCommandGroup(
       new InstantCommand(() -> m_drivetrainSubsystem.resetOdometry(trajectory.getInitialPose())),
       swerveControllerCommand,
       new InstantCommand(() -> m_drivetrainSubsystem.killModules()));
+    
+    SequentialCommandGroup DriveAuto2 = new SequentialCommandGroup(
+      new InstantCommand(() -> m_drivetrainSubsystem.resetOdometry(trajectory.getInitialPose())),
+      swerveControllerCommand2,
+      new InstantCommand(() -> m_drivetrainSubsystem.killModules()));
 
     SequentialCommandGroup TwoBall = new SequentialCommandGroup(m_kickoutCommand.withTimeout(1), m_runFeederAuto.withTimeout(1),
-    DriveAuto.withTimeout(5), new TurretRotateCommand(m_turretSubsystem, m_limelightSubsystem, m_controller).withTimeout(2), m_shootAutoCommand(8400, 8000), m_shootAutoCommand(8400, 8000));
+    DriveAuto.withTimeout(5), DriveAuto2.withTimeout(5), new TurretRotateCommand(m_turretSubsystem, m_limelightSubsystem, m_controller).withTimeout(2), m_adaptiveShootCommand(), new WaitCommand(1), m_adaptiveShootCommand());
 
     return TwoBall;
 

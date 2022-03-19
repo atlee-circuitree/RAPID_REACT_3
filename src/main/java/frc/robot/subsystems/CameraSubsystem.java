@@ -16,11 +16,11 @@ public class CameraSubsystem extends SubsystemBase {
   public CameraSubsystem() {
     //usbCamera.setResolution(200, 100);
     //CameraServer.startAutomaticCapture(usbCamera);
-    CameraServer.startAutomaticCapture("Rear Camera", 0);
+    //CameraServer.startAutomaticCapture("Rear Camera", 0);
   }
 
   public void initRearCamera(){
-    CameraServer.startAutomaticCapture("Rear Camera", 0);
+    //CameraServer.startAutomaticCapture("Rear Camera", 0);
   }
 
   @Override

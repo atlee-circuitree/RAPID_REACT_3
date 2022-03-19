@@ -39,7 +39,7 @@ public class TurretRotateCommand extends CommandBase {
   public void execute() {
 
     //Check Red/Blue and Green/Blue SparkMax led code
-    if(xbox.getRightBumper() == true){
+    if(xbox.getLeftTriggerAxis() >= 0.5){
       turret.turnTurret(xbox.getLeftX() / 4);
     }
     else if(limelight.HorizontalOffset() > .2 && limelight.HasValidTarget() == true){
