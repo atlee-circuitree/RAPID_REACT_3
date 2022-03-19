@@ -90,7 +90,7 @@ public class RobotContainer {
   private final DefaultDriveCommand m_driveCommand = new DefaultDriveCommand(m_drivetrainSubsystem,() -> -modifyAxis(m_controller.getLeftY()) * DrivetrainSubsystem.MAX_VELOCITY_METERS_PER_SECOND,() -> -modifyAxis(m_controller.getLeftX()) * DrivetrainSubsystem.MAX_VELOCITY_METERS_PER_SECOND,() -> -modifyAxis(m_controller.getRightX()) * DrivetrainSubsystem.MAX_ANGULAR_VELOCITY_RADIANS_PER_SECOND);
   //private final ShooterWithLimelight m_shootCommand = new ShooterWithLimelight(4000, m_turretSubsystem, m_pneumaticSubsystem, m_limelightSubsystem, m_feederSubsystem);
   private final KickoutPistonCommand m_kickoutCommand = new KickoutPistonCommand(m_pneumaticSubsystem);
-  private final RunFeederAuto m_runFeederAuto = new RunFeederAuto(.5, m_feederSubsystem, m_pneumaticSubsystem);
+  private final RunFeederAuto m_runFeederAuto = new RunFeederAuto(.55, m_feederSubsystem, m_pneumaticSubsystem);
 
   public Command m_shootCommand(double topVelocity, double bottomVelocity) {  
     Command m_shootCommand = new ShooterWithLimelight(topVelocity, bottomVelocity, m_turretSubsystem, m_pneumaticSubsystem, m_limelightSubsystem, m_feederSubsystem);
@@ -255,6 +255,7 @@ public class RobotContainer {
     JoystickButton OperatorX = new JoystickButton(m_controller2, XboxController.Button.kX.value);
     JoystickButton OperatorY = new JoystickButton(m_controller2, XboxController.Button.kY.value);
     
+     //DriverA.whenPressed(m_shootWithShuffleCommand(), false);
     //Velocity: 6400 Bottom: 1.4 Limelight: 101.3
     //Veocity: 7500 Bottom: 1.4 Limelight: 124.4
     OperatorA.whenPressed(m_adaptiveShootCommand(), false);
@@ -328,8 +329,9 @@ public class RobotContainer {
     //32in 1 units
     //68in 2 units
     //new Translation2d(-0.5, 0)
-    ), new Pose2d(-1, 0, Rotation2d.fromDegrees(-22)),
-    trajectoryConfig); 
+    ), new Pose2d(-1, 0, Rotation2d.fromDegrees(-15)),
+//), new Pose2d(-1, 0, Rotation2d.fromDegrees(0)),   //Panten changed
+trajectoryConfig); 
 
     PIDController xController = new PIDController(Constants.kPXController, 0, 0);
     PIDController yController = new PIDController(Constants.kPYController, 0, 0);
@@ -356,6 +358,16 @@ public class RobotContainer {
     m_drivetrainSubsystem::setSwerveModuleStates, 
     m_drivetrainSubsystem);
 
+    SwerveControllerCommand swerveControllerCommand3 = new SwerveControllerCommand(
+      trajectory,
+      m_drivetrainSubsystem::getPose,
+      Constants.SWERVE_KINEMATICS,
+      xController,
+      yController,
+      thetaController,
+      m_drivetrainSubsystem::setSwerveModuleStates, 
+      m_drivetrainSubsystem);
+  
     SequentialCommandGroup DriveAuto = new SequentialCommandGroup(
       new InstantCommand(() -> m_drivetrainSubsystem.resetOdometry(trajectory.getInitialPose())),
       swerveControllerCommand,
@@ -366,6 +378,11 @@ public class RobotContainer {
       swerveControllerCommand2,
       new InstantCommand(() -> m_drivetrainSubsystem.killModules()));
 
+      SequentialCommandGroup DriveAuto3 = new SequentialCommandGroup(
+        new InstantCommand(() -> m_drivetrainSubsystem.resetOdometry(trajectory.getInitialPose())),
+        swerveControllerCommand3,
+        new InstantCommand(() -> m_drivetrainSubsystem.killModules()));
+  
     SequentialCommandGroup TwoBall = new SequentialCommandGroup(m_kickoutCommand.withTimeout(1), m_runFeederAuto.withTimeout(1),
     DriveAuto.withTimeout(5), DriveAuto2.withTimeout(5), new TurretRotateCommand(m_turretSubsystem, m_limelightSubsystem, m_controller).withTimeout(2), m_adaptiveShootCommand(), new WaitCommand(1), m_adaptiveShootCommand());
 
