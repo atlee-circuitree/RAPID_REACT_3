@@ -10,9 +10,11 @@ package frc.robot.subsystems;
 
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
+import frc.robot.RobotContainer;
 import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.networktables.NetworkTableInstance;
+import edu.wpi.first.wpilibj.GenericHID.RumbleType;
 //Limelight Values
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
@@ -184,7 +186,17 @@ public class LimeLightSubsystem extends SubsystemBase {
     limelightDashboard = limelightDashboard + "Theoretical Distance To Target/" + getDistanceToTarget() + ";";
     SmartDashboard.putNumber("Limelight Distance", getDistanceToTarget());
     SmartDashboard.putNumber("Distance Rounded", distanceRounded(getDistanceToTarget()));
-     
+    
+  
+    if(getDistanceToTarget() > 4.5){
+      //RobotContainer.m_controller2.setRumble(RumbleType.kLeftRumble, 0.1);
+      //RobotContainer.m_controller2.setRumble(RumbleType.kRightRumble, 0.1);
+      SmartDashboard.putBoolean("Limelight out of range", true);
+    }
+    else{
+      SmartDashboard.putBoolean("Limelight out of range", false);
+    }
+
   }
 
 
