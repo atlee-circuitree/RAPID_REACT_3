@@ -22,6 +22,7 @@ import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.wpilibj.AnalogEncoder;
 import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj.PWM;
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.Constants;
 import frc.robot.LaunchVelocity;
@@ -63,8 +64,8 @@ public class TurretSubsystem extends SubsystemBase {
     SmartDashboard.putNumber("Turret Velocity", smartVelocity);
     double smartBottomMotorMod = SmartDashboard.getNumber("Turret Bottom Velocity", 1);
     SmartDashboard.putNumber("Turret Bottom Velocity", smartBottomMotorMod);
-    SmartDashboard.putNumber("Shot Top Velocity Pos/100ms", checkTopMotorWithVelocity());
-    SmartDashboard.putNumber("Shot Bottom Velocity Pos/100ms", checkBottomTurretWithVelocity());
+    SmartDashboard.putNumber("Shot Top Velocity Pos/100ms", returnTopMotorWithVelocity());
+    SmartDashboard.putNumber("Shot Bottom Velocity Pos/100ms", returnBottomMotorWithVelocity());
  
   }
 
@@ -160,6 +161,20 @@ public class TurretSubsystem extends SubsystemBase {
 
   }
 
+  public boolean checkShootVelocity(double topVelocity, double bottomVelocity, Timer timer) {
+
+    if (topShootMotor.getSelectedSensorVelocity() > topVelocity - 100 || timer.get() > .7) {
+      
+      return true;
+
+    } else {
+
+      return false;
+
+    }
+
+  }
+
   public void killTurretMotors(){
     topShootMotor.set(ControlMode.PercentOutput, 0);
     bottomShootMotor.set(ControlMode.PercentOutput, 0);
@@ -179,19 +194,13 @@ public class TurretSubsystem extends SubsystemBase {
 
   }
 
-  public double checkTopMotorWithVelocity() {
+  public double returnTopMotorWithVelocity() {
     //Cose SZ shoot = Bottom * 1.3
     return -topShootMotor.getSelectedSensorVelocity();
     
   }
 
-  public double checkBottomMotorWithVelocity() {
-    //Close SZ shoot = Bottom * 1.3
-    return bottomShootMotor.getSelectedSensorVelocity();
-    
-  }
-
-  public double checkBottomTurretWithVelocity() {
+  public double returnBottomMotorWithVelocity() {
     //Close SZ shoot = Bottom * 1.3
     return bottomShootMotor.getSelectedSensorVelocity();
     

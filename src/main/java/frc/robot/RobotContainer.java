@@ -46,6 +46,7 @@ import frc.robot.commands.KickoutPistonCommand;
 import frc.robot.commands.RunFeeder;
 import frc.robot.commands.RunFeederAuto;
 import frc.robot.commands.RunHookCommand;
+import frc.robot.commands.TurretAndShoot;
 import frc.robot.commands.ShooterInAuto;
 import frc.robot.commands.ShooterWithLimelight;
 import frc.robot.commands.ShooterWithLimelightAutoDistance;
@@ -88,7 +89,8 @@ public class RobotContainer {
   //Single Commands
   private final TurretRotateCommand m_turretRotateCommand = new TurretRotateCommand(m_turretSubsystem, m_limelightSubsystem, m_controller2);
   private final DefaultDriveCommand m_driveCommand = new DefaultDriveCommand(m_drivetrainSubsystem,() -> -modifyAxis(m_controller.getLeftY()) * DrivetrainSubsystem.MAX_VELOCITY_METERS_PER_SECOND,() -> -modifyAxis(m_controller.getLeftX()) * DrivetrainSubsystem.MAX_VELOCITY_METERS_PER_SECOND,() -> -modifyAxis(m_controller.getRightX()) * DrivetrainSubsystem.MAX_ANGULAR_VELOCITY_RADIANS_PER_SECOND);
-  //private final ShooterWithLimelight m_shootCommand = new ShooterWithLimelight(4000, m_turretSubsystem, m_pneumaticSubsystem, m_limelightSubsystem, m_feederSubsystem);
+  private final DefaultDriveCommand m_driveCommand2 = new DefaultDriveCommand(m_drivetrainSubsystem,() -> -modifyAxis(m_controller.getLeftY()) * DrivetrainSubsystem.MAX_VELOCITY_METERS_PER_SECOND,() -> -modifyAxis(m_controller.getLeftX()) * DrivetrainSubsystem.MAX_VELOCITY_METERS_PER_SECOND,() -> -modifyAxis(m_controller.getRightX()) * DrivetrainSubsystem.MAX_ANGULAR_VELOCITY_RADIANS_PER_SECOND);
+  private final TurretAndShoot m_turretAndShootCommand = new TurretAndShoot(m_turretSubsystem, m_pneumaticSubsystem, m_limelightSubsystem, m_controller2);
   private final KickoutPistonCommand m_kickoutCommand = new KickoutPistonCommand(m_pneumaticSubsystem);
   private final RunFeederAuto m_runFeederAuto = new RunFeederAuto(.55, m_feederSubsystem, m_pneumaticSubsystem);
 
@@ -176,8 +178,8 @@ public class RobotContainer {
     // Left stick Y axis -> forward and backwards movement
     // Left stick X axis -> left and right movement
     // Right stick X axis -> rotation
-    PerpetualCommand DriveWithTurret = new PerpetualCommand(m_driveCommand.alongWith(m_turretRotateCommand)); 
-    
+    //PerpetualCommand DriveWithTurret = new PerpetualCommand(m_driveCommand.alongWith(m_turretRotateCommand)); 
+    PerpetualCommand DriveWithTurretAndShoot = new PerpetualCommand(m_driveCommand.alongWith(m_turretAndShootCommand)); 
     //auto.setDefaultOption("TwoBall", 1);
     //auto.addOption("None", 0);
     //auto.addOption("Four Ball", 2.0);
@@ -186,7 +188,7 @@ public class RobotContainer {
 
     m_drivetrainSubsystem.zeroGyroscope();
     
-    m_drivetrainSubsystem.setDefaultCommand(DriveWithTurret);
+    m_drivetrainSubsystem.setDefaultCommand(DriveWithTurretAndShoot);
 
     cameraSubsystem.initRearCamera();
     
@@ -258,13 +260,13 @@ public class RobotContainer {
      //DriverA.whenPressed(m_shootWithShuffleCommand(), false);
     //Velocity: 6400 Bottom: 1.4 Limelight: 101.3
     //Veocity: 7500 Bottom: 1.4 Limelight: 124.4
-    OperatorA.whenPressed(m_adaptiveShootCommand(), false);
+    //OperatorA.whenPressed(m_adaptiveShootCommand(), false);
     
-    OperatorB.whenPressed(m_shootCommand(7700, 8000), false);
+    //OperatorB.whenPressed(m_shootCommand(7700, 8000), false);
 
-    OperatorY.whenPressed(m_shootCommand(11200, 7800), false);
+    //OperatorY.whenPressed(m_shootCommand(11200, 7800), false);
 
-    OperatorX.whenPressed(m_shootCommand(4000, 4000), false);
+    //OperatorX.whenPressed(m_shootCommand(4000, 4000), false);
     //6400 12ft position
 
     //Fightstick Buttons
@@ -384,7 +386,7 @@ trajectoryConfig);
         new InstantCommand(() -> m_drivetrainSubsystem.killModules()));
   
     SequentialCommandGroup TwoBall = new SequentialCommandGroup(m_kickoutCommand.withTimeout(1), m_runFeederAuto.withTimeout(1),
-    DriveAuto.withTimeout(5), DriveAuto2.withTimeout(5), new TurretRotateCommand(m_turretSubsystem, m_limelightSubsystem, m_controller).withTimeout(2), m_adaptiveShootCommand(), new WaitCommand(1), m_adaptiveShootCommand());
+    DriveAuto.withTimeout(5), DriveAuto2.withTimeout(5), new TurretRotateCommand(m_turretSubsystem, m_limelightSubsystem, m_controller).withTimeout(2), m_adaptiveShootCommand(), new WaitCommand(1), m_adaptiveShootCommand(), DriveAuto3.withTimeout(5), m_adaptiveShootCommand(), new WaitCommand(0.75), m_adaptiveShootCommand());
 
     return TwoBall;
 
