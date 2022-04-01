@@ -67,7 +67,7 @@ public class ShooterWithLimelightAutoDistance extends CommandBase {
   @Override
   public void execute() {
 
-    if (Math.abs(velocity) >= Math.abs(turret.returnTopMotorWithVelocity()) - 50 && Math.abs(bottomVelocity) >= Math.abs(turret.returnBottomMotorWithVelocity()) - 50) {
+    if (Math.abs(velocity) >= Math.abs(turret.checkTopMotorWithVelocity()) - 50 && Math.abs(bottomVelocity) >= Math.abs(turret.checkBottomMotorWithVelocity()) - 50) {
     
       turret.runTurretWithVelocity(velocity, bottomVelocity);
       SmartDashboard.putNumber("Target Top Speed", velocity);

@@ -55,7 +55,7 @@ public class ShooterWithShuffle extends CommandBase {
   @Override
   public void execute() {
     //Original time values: 0.5 and 1.2
-    if (Math.abs(turret.returnTopMotorWithVelocity() - SmartDashboard.getNumber("Turret Velocity", 9000)) >= 100 && Math.abs(turret.returnBottomMotorWithVelocity() - SmartDashboard.getNumber("Turret Bottom Velocity", 9000)) >= 100) {
+    if (Math.abs(turret.checkTopMotorWithVelocity() - SmartDashboard.getNumber("Turret Velocity", 9000)) >= 100 && Math.abs(turret.checkBottomMotorWithVelocity() - SmartDashboard.getNumber("Turret Bottom Velocity", 9000)) >= 100) {
  
       turret.runTurretFromSystem(turret.shuffleShooterTop, turret.shuffleShooterBottom);
       System.out.println("Stage 1, not at velocity");

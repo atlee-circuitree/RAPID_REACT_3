@@ -31,7 +31,7 @@ public class DefaultDriveCommand extends CommandBase {
 
     @Override
     public void execute() {
-        // You can use `new ChassisSpeeds(...)` for robo    t-oriented movement instead of field-oriented movement
+        // You can use `new ChassisSpeeds(...)` for robot-oriented movement instead of field-oriented movement
         
         //if(RobotContainer.m_controller.getLeftTriggerAxis() > 0){
         //    speedMod = 0.2;
